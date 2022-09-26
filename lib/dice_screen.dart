@@ -1,5 +1,8 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'constants.dart';
 import 'dice_model.dart';
 
 class DiceScreen extends StatefulWidget {
@@ -41,7 +44,20 @@ class _DiceScreenState extends State<DiceScreen> {
           current.add(res);
         }
       }
-      //TODO: go str.substring(0,str.indexOf("-"))
+      _shake();
+    });
+  }
+  void _shake(){
+    Random random = Random();
+    List<Dice> twin = _listDice;
+    List<Dice> result = [];
+    while(twin.length > 0){
+      int index = random.nextInt(twin.length);
+      result.add(twin.elementAt(index));
+      twin.removeAt(index);
+    }
+    setState(() {
+      _listDice = result;
     });
   }
   void _addDice(Dice dice){
@@ -52,13 +68,14 @@ class _DiceScreenState extends State<DiceScreen> {
   }
   void _removeDice(Dice type){
     setState(() {
-      for(int i  = 0; i < _listDice.length; i++){
-        if(_listDice[i].runtimeType == type.runtimeType){
-          _listDice.removeAt(i);
-          return;
+      if(_listDice.length > 1) {
+        for (int i = 0; i < _listDice.length; i++) {
+          if (_listDice[i].runtimeType == type.runtimeType) {
+            _listDice.removeAt(i);
+            return;
+          }
         }
       }
-      _countType(type);
     });
   }
   int _countType(Dice type){
@@ -72,6 +89,7 @@ class _DiceScreenState extends State<DiceScreen> {
   }
 
   void _modalBottomSheetMenu(){
+    final List<Dice> listAllDice = [D4(),D6(),D8(),D10(),D12(),D20()];
     showModalBottomSheet(
         context: context,
         //isScrollControlled: true,
@@ -80,83 +98,141 @@ class _DiceScreenState extends State<DiceScreen> {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         builder: (builder){
           return Scaffold(
-            backgroundColor: Colors.brown[600],
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ListView(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("dice: ${_listDice.length}"),
-                      ElevatedButton(onPressed: (){}, child: Text("clear")),
-                    ]
-                  ),
-                  Divider(),
-                  Row(
+            backgroundColor: defPriClr,
+            body: ListView.builder(
+              itemCount: listAllDice.length,
+                itemBuilder: (context,index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical:5),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container( height: 100, child: Image.asset(D4().sides.keys.first)),
-                        Text("${_countType(D4())}"),
-                        ElevatedButton(onPressed: () => _addDice(D4()), child: Text("+")),
-                        ElevatedButton(onPressed: ()=> _removeDice(D4()), child: Text("-")),
-                      ]
-                  ),
-                  Divider(),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(height: 100,child: Image.asset(D6().sides.keys.last)),
-                        Text("${_countType(D6())}"),
-                        ElevatedButton(onPressed: ()=> _addDice(D6()), child: Text("+")),
-                        ElevatedButton(onPressed: ()=> _removeDice(D6()), child: Text("-")),
-                      ]
-                  ),
-                  Divider(),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(height: 100,child: Image.asset(D8().sides.keys.first)),
-                        Text("${_countType(D8())}"),
-                        ElevatedButton(onPressed: ()=> _addDice(D8()), child: Text("+")),
-                        ElevatedButton(onPressed: ()=> _removeDice(D8()), child: Text("-")),
-                      ]
-                  ),
-                  Divider(),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(height: 100,child: Image.asset(D10().sides.keys.first)),
-                        Text("${_countType(D10())}"),
-                        ElevatedButton(onPressed: () => _addDice(D10()), child: Text("+")),
-                        ElevatedButton(onPressed: ()=> _removeDice(D10()), child: Text("-")),
-                      ]
-                  ),
-                  Divider(),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(height: 100,child: Image.asset(D12().sides.keys.first,color: Colors.white)),
-                        Text("${_countType(D12())}"),
-                        ElevatedButton(onPressed: () => _addDice(D12()), child: Text("+")),
-                        ElevatedButton(onPressed: () => _removeDice(D12()), child: Text("-")),
-                      ]
-                  ),
-                  Divider(),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(height: 100,child: Image.asset(D20().sides.keys.first,color: Colors.white)),
-                        Text("${_countType(D20())}"),
-                        ElevatedButton(onPressed: () => _addDice(D20()), child: Text("+")),
-                        ElevatedButton(onPressed: () => _removeDice(D20()), child: Text("-")),
-                      ]
-                  ),
-                ],
-              ),
-            ),
+                        children: [
+                          Container(
+                              height: 100,
+                              child: Image.asset(listAllDice[index].sides.keys.first, color: defSecClr)),
+                          Text("${listAllDice[index].runtimeType} : ${_countType(listAllDice[index])}",
+                              style: defTs,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _addDice(listAllDice[index]);
+                                    });
+                                  },
+                                  child: Icon(Icons.add,color:defPriClr,),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: defSecClr,
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(30),
+                                            bottomLeft: Radius.circular(30) )),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 50,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: defSecClr,
+                                      elevation: 3,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(30),
+                                              bottomRight: Radius.circular(30)),),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _removeDice(listAllDice[index]);
+                                      });
+                                    },
+                                    child: Icon(Icons.close,color: defPriClr)
+                                ),
+                              ),
+                            ],
+                          )
+                        ]
+                    ),
+                  );
+                },
+            )
+            //
+            // GridView.builder(
+            //   itemCount: listAllDice.length,
+            //   physics: BouncingScrollPhysics(),
+            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //     crossAxisCount: 2,
+            //     crossAxisSpacing: 5.0,
+            //     mainAxisSpacing: 5.0,
+            //   ),
+            //   itemBuilder: (context,index) {
+            //     return Row(
+            //         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Container(
+            //             height: 150,
+            //               child: Image.asset(listAllDice[index].sides.keys.first, color: Colors.white)),
+            //           Text("${_countType(listAllDice[index])}",
+            //             style: TextStyle(
+            //                 fontSize: 18,
+            //                 fontFamily: "MarkoOne",
+            //                 fontWeight: FontWeight.bold
+            //             )
+            //           ),
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             children: [
+            //               ElevatedButton(
+            //                 onPressed: () => _addDice(listAllDice[index]),
+            //                 child: Container(child: Icon(Icons.add,color: Colors.brown[700],),
+            //                   //padding: EdgeInsets.all(20),
+            //                   height: 40, width: 40,
+            //                 ),
+            //                 style: ElevatedButton.styleFrom(
+            //                   backgroundColor: Colors.white,
+            //                     elevation: 3,
+            //                     shape: RoundedRectangleBorder(
+            //                         borderRadius: BorderRadius.circular(30)),
+            //                 ),
+            //               ),
+            //               ElevatedButton(
+            //                   style: ElevatedButton.styleFrom(
+            //                     backgroundColor: Colors.white,
+            //                     elevation: 3,
+            //                     shape: RoundedRectangleBorder(
+            //                         borderRadius: BorderRadius.circular(30)),
+            //                   ),
+            //                   onPressed: () => _removeDice(listAllDice[index]),
+            //                   child: Icon(Icons.close,color: Colors.brown[700])
+            //               ),
+            //             ],
+            //           )
+            //         ]
+            //     );
+            //   },
+
+
+
+
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+
+              // children: [
+              //   Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text("dice: ${_listDice.length}"),
+              //       ElevatedButton(onPressed: (){}, child: Text("clear")),
+              //     ]
+              //   ),
+              //   Divider(),
+
+            //),
           );
         }
     );
@@ -187,7 +263,7 @@ class _DiceScreenState extends State<DiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[400],
+      backgroundColor: defPriClr,
       body: SafeArea(
         child: Container(
           //height: 600,
