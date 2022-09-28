@@ -28,8 +28,7 @@ class DiceScreen extends StatelessWidget {
                     child: state.currentImg.isEmpty ? null
                         : GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: state.listDice.length < 4 ? state.listDice
-                              .length : 3,
+                          crossAxisCount: context.read<DiceCubit>().axisCount(),
                         ),
                         itemCount: state.currentImg.length,
                         physics: state.listDice.length < 7

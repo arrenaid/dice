@@ -82,4 +82,19 @@ class DiceCubit extends Cubit<DiceState>{
     }
     return result;
   }
+  int axisCount(){
+    int len = state.listDice.length;
+    int result = 1;
+    if(len != 1 && len <= 4)
+      result = 2;
+    else{
+      if(len > 4 ){
+        result = 3;
+        if( len > 9){
+          result = 4;
+        }
+      }
+    }
+    return result;
+  }
 }
