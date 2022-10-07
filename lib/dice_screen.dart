@@ -1,9 +1,9 @@
+import 'dart:math';
 import 'package:dice/bottom_sheet_widget.dart';
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'constants.dart';
-import 'splash_animation_widget.dart';
 
 class DiceScreen extends StatefulWidget  {
   const DiceScreen({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 750),
+      duration: const Duration(milliseconds: 250),
       animationBehavior: AnimationBehavior.preserve
     );
 
@@ -53,29 +53,35 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                             .height / 2,
                         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
                         child: state.currentImg.isEmpty ? null
-                            : GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: context.read<DiceCubit>().axisCount(),
-                            ),
-                            itemCount: state.currentImg.length,
-                            physics: state.listDice.length < 7
-                                ? const NeverScrollableScrollPhysics()
-                                : const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return RotationTransition(
-                                turns: _controller,
-                                child: FadeTransition(
-                                  opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                  child: ScaleTransition(
-                                    scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image(image: state.currentImg[index].image, color: defSecClr),
-                                    ),
-                                  ),
+                            : ScaleTransition(
+                              scale: _controller.drive(Tween<double>(begin: 1.0,end: 2.0)),
+                              child: RotationTransition(
+                                turns: _controller.drive(Tween<double>(begin: 1.0,end: pi/3)),
+                                child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: context.read<DiceCubit>().axisCount(),
                                 ),
-                              );
-                            }),
+                                itemCount: state.currentImg.length,
+                                physics: state.listDice.length < 7
+                                    ? const NeverScrollableScrollPhysics()
+                                    : const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return RotationTransition(
+                                    turns: _controller.drive(Tween<double>(begin: 1.0,end: pi/6)),
+                                    child: FadeTransition(
+                                      opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
+                                      child: ScaleTransition(
+                                        scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.1)),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(image: state.currentImg[index].image, color: defSecClr),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
                       ),
                       Center(
                         child: Row(
@@ -83,31 +89,29 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                           children: [
                             Container(
                               child: state.currentImg.isEmpty ? null
-                                  : RotationTransition(
-                                    turns: _controller,
+                                  : FadeTransition(
+                                    opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
                                     child: ScaleTransition(
-                                      scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                      child: FadeTransition(
-                                        opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                        child: Text("${state.rollResult}",
+                                      //,
+                                      //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
+                                      //sizeFactor: ,
+
+                                      scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),
+                                      child: Text("${state.rollResult}",
                                 style: defTs.copyWith(fontSize: 100),
                               ),
-                                      ),
                                     ),
                                   ),
                             ),
-                            RotationTransition(
-                              turns: _controller,
-                              child: ScaleTransition(
-                                scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                child: FadeTransition(
-                                  opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                  child:Container(
-                              child: state.currentImg.isEmpty ? null
-                                  : Text("${state.rollMax}",
-                                style: defTs.copyWith(fontSize: 10),
-                              ),),),
-                              ),
+                            ScaleTransition(
+                              scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.8)),
+                              child: FadeTransition(
+                                opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
+                                child:Container(
+                            child: state.currentImg.isEmpty ? null
+                                : Text("${state.rollMax}",
+                              style: defTs.copyWith(fontSize: 10),
+                            ),),),
                             ),
                           ],
                         ),
@@ -115,13 +119,6 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                       SizedBox(height: MediaQuery.of(context).size.height / 5,),
                     ],
                   ),
-                  //animation
-                  // Center(
-                  //   child: Align(
-                  //     alignment: Alignment(0.0, 0.8),
-                  //     child: SplashAnimationWidget(controller: _controller, context: context),
-                  //   ),
-                  // ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,8 +139,9 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                             style: defTs.copyWith(fontSize: 40,shadows: []),
                           ),
                           onPressed: () {
-                            _controller.forward().whenComplete(() => _controller.reverse());
-                            context.read<DiceCubit>().roll();
+                            _controller.forward().whenComplete(() {
+                              context.read<DiceCubit>().roll();
+                              _controller.reverse();});
                           },
                           onLongPress: () {
                             showModalBottomSheet(
