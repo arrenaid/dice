@@ -50,10 +50,11 @@ class DiceCubit extends Cubit<DiceState>{
     //emit(state.copyWith(listDice: result,status: StateStatus.loaded));
     return result;
   }
-  addDice(Dice dice){
+  addDice(Dice dice,{int? length}){
     emit(state.copyWith(status: StateStatus.loading));
     List<Dice> twin = state.listDice;
-    twin.add(dice);
+    if(length != null) twin.add(DCustom(length: length));
+    else twin.add(dice);
     emit(state.copyWith(listDice: twin, rollMax:_countRollMax(twin),
         status: StateStatus.loaded ));
     //countType(dice);

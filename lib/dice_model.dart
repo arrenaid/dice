@@ -97,3 +97,32 @@ class D20 extends Dice{
     "dice/d20.png-19" : 20
   };
 }
+class DCustom extends Dice{
+
+  DCustom({int? length = 100} ){
+    Map<String, int> map = {
+      "dice/dicecustom.png" : 1
+    };
+    while(map.length != length) {
+      map.addAll({"dice/dicecustom.png-${map.length + 1}": map.length + 1} );
+    }
+    sides = map;
+  }
+  @override
+  String roll() {
+    // TODO: implement roll
+    String roll = super.roll();
+    _rollResult = sides[roll]!;
+    return roll;
+  }
+
+  @override
+  Map<String, int> sides = {};
+  int _rollResult = -1;
+
+  int get rollResult => _rollResult;
+}
+class AnonymousDice extends Dice{
+  @override
+  Map<String, int> get sides => throw UnimplementedError();
+}
