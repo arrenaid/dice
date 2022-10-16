@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 
 abstract class Dice {
   abstract final Map<String,int> sides;
@@ -97,7 +96,7 @@ class D20 extends Dice{
     "dice/d20.png-19" : 20
   };
 }
-class DCustom extends Dice{
+class DCustom extends Dice {
 
   DCustom({int? length = 100} ){
     Map<String, int> map = {
@@ -119,8 +118,17 @@ class DCustom extends Dice{
   @override
   Map<String, int> sides = {};
   int _rollResult = -1;
-
   int get rollResult => _rollResult;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DCustom &&
+          runtimeType == other.runtimeType &&
+          sides == other.sides;
+
+  @override
+  int get hashCode => sides.hashCode;
 }
 class AnonymousDice extends Dice{
   @override

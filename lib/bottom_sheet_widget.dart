@@ -11,9 +11,10 @@ class DiceController extends StatefulWidget {
 }
 
 class _DiceControllerState extends State<DiceController> {
-  List<Dice> listAllDice = [ D4(), D6(), D8(), D10(), D12(), D20(), AnonymousDice() ];
+ // List<Dice> listAllDice = [ D4(), D6(), D8(), D10(), D12(), D20(), AnonymousDice() ];
 
   final _formKey = GlobalKey<FormState>();
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,33 +22,50 @@ class _DiceControllerState extends State<DiceController> {
       return Scaffold(
           backgroundColor: defPriClr,
           body: ListView.builder(
-            itemCount: listAllDice.length,
+            itemCount: state.listAllDice.length,//listAllDice.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                child: listAllDice[index].runtimeType == AnonymousDice
+                child: state.listAllDice[index].runtimeType == AnonymousDice
                     ? addCustomDiceRow(context)
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      state.listAllDice[index].runtimeType == DCustom
+                      ? ElevatedButton(
+                        onPressed: () => context.read<DiceCubit>().removeCustomDice(index),
+                        child: Text("del",style: defTs,),
+                        // Icon(
+                        //   Icons.add,
+                        //   color: defPriClr,
+                        // ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: defBtnClr,
+                          elevation: 3,
+                          shape:RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                        ),
+                      )
+                      : Container(
                           height: MediaQuery.of(context).size.width / 6,
                           child: Image.asset(
-                              listAllDice[index].sides.keys.first,
+                              state.listAllDice[index].sides.keys.first,
                               color: defSecClr)),
 
-                      Text( listAllDice[index].runtimeType == DCustom
-                          ? "D${listAllDice[index].sides.length} :"
-                          : "${listAllDice[index].runtimeType} :"
-                          " ${context.read<DiceCubit>().countType(listAllDice[index])}",style: defTs,),
+                      Text( state.listAllDice[index].runtimeType == DCustom
+                          ? "D${state.listAllDice[index].sides.length} : "
+                          " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                          : "${state.listAllDice[index].runtimeType} :"
+                          " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                        ,style: defTs,),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () => context.read<DiceCubit>().addDice(
-                                  listAllDice[index]),
+                                  state.listAllDice[index]),
                             child: Icon(
                               Icons.add,
                               color: defPriClr,
@@ -73,7 +91,7 @@ class _DiceControllerState extends State<DiceController> {
                               ),
                               onPressed: () => context
                                   .read<DiceCubit>()
-                                  .removeDice(listAllDice[index]),
+                                  .removeDice(state.listAllDice[index]),
                               child: Icon(Icons.close, color: defPriClr)),
                         ],
                       )
@@ -84,9 +102,10 @@ class _DiceControllerState extends State<DiceController> {
     });
   }
 
-  Widget addCustomDiceRow(context){
-    int length = 1;
-    return Row(
+  Widget addCustomDiceRow(BuildContext context){
+    int lengthValue = 1;
+    return isVisible
+        ? Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Form(
@@ -108,7 +127,7 @@ class _DiceControllerState extends State<DiceController> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
-              onSaved: (value) => length = int.parse(value!),
+              onSaved: (value) => lengthValue = int.parse(value!),
               validator: (value) {
                 if (value!.isEmpty) {
                   return "pls enter...";
@@ -125,24 +144,15 @@ class _DiceControllerState extends State<DiceController> {
 
         ElevatedButton(
           onPressed: () {
-
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               setState(() {
-                listAllDice.add(DCustom(length: length));
+                isVisible = false;
+                context.read<DiceCubit>().insertCustomDice(lengthValue);
               });
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  elevation: 15,
-                  duration: const Duration(seconds: 3),
-                  content: const Text("Add new Dice",
-                    style: defTs,)));
+              ScaffoldMessenger.of(context).showSnackBar(MySneckBar("Add Custom Dice"));
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  elevation: 15,
-                  duration: const Duration(seconds: 3),
-                  backgroundColor: Colors.red.withOpacity(0.6),
-                  content: const Text("error form",
-                    style: defTs,)));
+              ScaffoldMessenger.of(context).showSnackBar(MySneckBar("error form"));
             }
           },
           child: Icon(
@@ -157,6 +167,38 @@ class _DiceControllerState extends State<DiceController> {
           ),
         ),
       ],
+    )
+    :Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          setState(() {
+            isVisible = true;
+          });
+        },
+        child: Icon(
+          Icons.add,
+          color: defPriClr,
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: defSecClr,
+          elevation: 3,
+          shape:RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30)),
+        ),
+      ),
     );
   }
+}
+
+SnackBar MySneckBar(String title){
+  return SnackBar(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),),
+      elevation: 35,
+      duration: const Duration(seconds: 3),
+      backgroundColor:defBtnClr,
+      content: Text( title,
+        style: defTs, textAlign: TextAlign.center,));
 }

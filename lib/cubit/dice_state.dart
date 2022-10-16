@@ -4,6 +4,7 @@ enum StateStatus{ initial, loaded, loading, error, rolling}
 
 class DiceState extends Equatable {
   final List<Image> currentImg;
+  final List<Dice> listAllDice;
   final List<Dice> listDice;
   final int rollResult ;
   final int rollMax;
@@ -13,7 +14,9 @@ class DiceState extends Equatable {
         required this.listDice,
         required this.rollResult,
         required this.rollMax,
-        required this.status});
+        required this.status,
+    required this.listAllDice
+  });
 
   @override
   List<Object?> get props => [currentImg,listDice,rollResult,rollMax,status];
@@ -22,13 +25,16 @@ class DiceState extends Equatable {
     List<Dice>? listDice,
     int? rollResult,
     int? rollMax,
-    StateStatus? status
+    StateStatus? status,
+    List<Dice>? listAllDice
   }){
     return DiceState(currentImg: currentImg ?? this.currentImg,
         listDice: listDice ?? this.listDice,
         rollResult: rollResult ?? this.rollResult,
         rollMax: rollMax ?? this.rollMax,
-        status: status ?? this.status);
+        status: status ?? this.status,
+        listAllDice: listAllDice ?? this.listAllDice
+    );
   }
 
 }

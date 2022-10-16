@@ -8,6 +8,7 @@ part 'dice_state.dart';
 
 class DiceCubit extends Cubit<DiceState>{
   DiceCubit() : super(DiceState(currentImg: [], listDice: [D6(),D6()],
+      listAllDice: [D4(), D6(), D8(), D10(), D12(), D20(), AnonymousDice()],
       rollResult: 0, rollMax: 12, status: StateStatus.initial));
 
   int _countRollMax(List<Dice> twin){
@@ -65,7 +66,11 @@ class DiceCubit extends Cubit<DiceState>{
       if(twin.length > 1) {
         for (int i = 0; i < twin.length; i++) {
           if (twin[i].runtimeType == type.runtimeType) {
-            twin.removeAt(i);
+            if(type.runtimeType != DCustom) {
+              twin.removeAt(i);
+            } else if(twin[i] == type){
+              twin.removeAt(i);
+            } else { continue; }
             emit(state.copyWith(listDice: twin, rollMax: _countRollMax(twin),
                 status: StateStatus.loaded));
             return;
@@ -74,11 +79,17 @@ class DiceCubit extends Cubit<DiceState>{
       }
   }
   int countType(Dice type){
-    int result =0;
+    int result = 0;
     List<Dice> list = state.listDice;
     for(int i  = 0; i < list.length; i++){
-      if(list[i].runtimeType == type.runtimeType){
-        result += 1;
+      if(type.runtimeType != DCustom) {
+        if (list[i].runtimeType == type.runtimeType) {
+          result += 1;
+        }
+      }else{
+        if (list[i] == type) {
+          result += 1;
+        }
       }
     }
     return result;
@@ -97,5 +108,25 @@ class DiceCubit extends Cubit<DiceState>{
       }
     }
     return result;
+  }
+  insertCustomDice(int value){
+    emit(state.copyWith(status: StateStatus.loading));
+    List<Dice> twin = state.listAllDice;
+    twin.removeLast();
+    twin.add(DCustom(length: value));
+    twin.add(AnonymousDice());
+    emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
+  }
+  removeCustomDice(int index){
+    emit(state.copyWith(status: StateStatus.loading));
+    List<Dice> twin = state.listAllDice;
+    Dice removeType = twin.removeAt(index);
+    if(state.listDice.length == countType(removeType)){
+      addDice(D6());
+    }
+    while(countType(removeType) != 0){
+      removeDice(removeType);
+    }
+    emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
   }
 }
