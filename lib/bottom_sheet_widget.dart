@@ -22,6 +22,7 @@ class _DiceControllerState extends State<DiceController> {
       return Scaffold(
           backgroundColor: defPriClr,
           body: ListView.builder(
+            physics: BouncingScrollPhysics(),
             itemCount: state.listAllDice.length,//listAllDice.length,
             itemBuilder: (context, index) {
               return Padding(
@@ -150,9 +151,9 @@ class _DiceControllerState extends State<DiceController> {
                 isVisible = false;
                 context.read<DiceCubit>().insertCustomDice(lengthValue);
               });
-              ScaffoldMessenger.of(context).showSnackBar(MySneckBar("Add Custom Dice"));
+              ScaffoldMessenger.of(context).showSnackBar(MySnackBar("Add Custom Dice"));
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(MySneckBar("error form"));
+              ScaffoldMessenger.of(context).showSnackBar(MySnackBar("error form"));
             }
           },
           child: Icon(
@@ -191,7 +192,7 @@ class _DiceControllerState extends State<DiceController> {
   }
 }
 
-SnackBar MySneckBar(String title){
+SnackBar MySnackBar(String title){
   return SnackBar(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
@@ -200,5 +201,6 @@ SnackBar MySneckBar(String title){
       duration: const Duration(seconds: 3),
       backgroundColor:defBtnClr,
       content: Text( title,
-        style: defTs, textAlign: TextAlign.center,));
+        style: defTs,
+        textAlign: TextAlign.center,));
 }

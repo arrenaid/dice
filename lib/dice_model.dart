@@ -2,8 +2,14 @@ import 'dart:math';
 
 abstract class Dice {
   abstract final Map<String,int> sides;
+
+  late int _rollResult;
+  int get rollResult => _rollResult;
+
   String roll(){
-    return sides.keys.elementAt(Random().nextInt(sides.length));
+    String roll = sides.keys.elementAt(Random().nextInt(sides.length));
+    _rollResult = sides[roll]!;
+    return roll;
   }
 }
 class D6 extends Dice{
@@ -97,7 +103,6 @@ class D20 extends Dice{
   };
 }
 class DCustom extends Dice {
-
   DCustom({int? length = 100} ){
     Map<String, int> map = {
       "dice/dicecustom.png" : 1
@@ -108,18 +113,7 @@ class DCustom extends Dice {
     sides = map;
   }
   @override
-  String roll() {
-    // TODO: implement roll
-    String roll = super.roll();
-    _rollResult = sides[roll]!;
-    return roll;
-  }
-
-  @override
   Map<String, int> sides = {};
-  int _rollResult = -1;
-  int get rollResult => _rollResult;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

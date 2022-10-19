@@ -3,7 +3,7 @@ part of 'dice_cubit.dart';
 enum StateStatus{ initial, loaded, loading, error, rolling}
 
 class DiceState extends Equatable {
-  final List<Image> currentImg;
+  final List<Widget> currentImg;
   final List<Dice> listAllDice;
   final List<Dice> listDice;
   final int rollResult ;
@@ -21,7 +21,7 @@ class DiceState extends Equatable {
   @override
   List<Object?> get props => [currentImg,listDice,rollResult,rollMax,status];
   DiceState copyWith({
-    List<Image>? currentImg,
+    List<Widget>? currentImg,
     List<Dice>? listDice,
     int? rollResult,
     int? rollMax,

@@ -74,7 +74,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                                         scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.1)),
                                         child: Container(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Image(image: state.currentImg[index].image, color: defSecClr),
+                                          child:  state.currentImg[index],//Image(image: state.currentImg[index].image, color: defSecClr),
                                         ),
                                       ),
                                     ),
