@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       create: (context) => DiceCubit(),
       child: MaterialApp(
         title: 'Dice',
+        debugShowCheckedModeBanner: false,
         home: DiceScreen(),
       ),
     );

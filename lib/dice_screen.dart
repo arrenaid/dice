@@ -135,7 +135,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),),
                           color: defBtnClr,
-                          splashColor: Colors.brown[900],
+                          splashColor: defPriClr,
                           elevation: 15,
                           enableFeedback: true,
                           textColor: Colors.white,
