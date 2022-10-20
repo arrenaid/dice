@@ -84,36 +84,40 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                             ),
                       ),
                       Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: state.currentImg.isEmpty ? null
-                                  : FadeTransition(
-                                    opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                    child: ScaleTransition(
-                                      //,
-                                      //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
-                                      //sizeFactor: ,
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: state.currentImg.isEmpty ? null
+                                    : FadeTransition(
+                                      opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
+                                      child: ScaleTransition(
+                                        //,
+                                        //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
+                                        //sizeFactor: ,
 
-                                      scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),
-                                      child: Text("${state.rollResult}",
-                                style: defTs.copyWith(fontSize: 100),
-                              ),
+                                        scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),
+                                        child: Text("${state.rollResult}",
+                                  style: defTs.copyWith(fontSize: 100),
+                                ),
+                                      ),
                                     ),
-                                  ),
-                            ),
-                            ScaleTransition(
-                              scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.8)),
-                              child: FadeTransition(
-                                opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                child:Container(
-                            child: state.currentImg.isEmpty ? null
-                                : Text("${state.rollMax}",
-                              style: defTs.copyWith(fontSize: 10),
-                            ),),),
-                            ),
-                          ],
+                              ),
+                              ScaleTransition(
+                                scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.8)),
+                                child: FadeTransition(
+                                  opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
+                                  child:Container(
+                              child: state.currentImg.isEmpty ? null
+                                  : Text("${state.rollMax}",
+                                style: defTs.copyWith(fontSize: 10),
+                              ),),),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height / 5,),
@@ -144,6 +148,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                               _controller.reverse();});
                           },
                           onLongPress: () {
+                            _controller.forward();
                             showModalBottomSheet(
                               context: context,
                               elevation: 15,

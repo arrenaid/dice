@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:bloc/bloc.dart';
+import 'package:dice/dice_stack_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +32,18 @@ class DiceCubit extends Cubit<DiceState> {
       int index = res.indexOf("-");
       if (element.runtimeType == DCustom) {
         //DCustom ?proxy = element as DCustom;
-        current.add(_stackPaint(index > 0 ? res.substring(0, index) : res,
-            element.rollResult, axisCount(), text:"D${element.sides.length}"));
+        current.add(DiceStackWidget(
+            imagePath: index > 0 ? res.substring(0, index) : res,
+            value: element.rollResult,
+            scale: axisCount(),
+            type: element.runtimeType,
+            text:"D${element.sides.length}"));
       }else if(element.runtimeType != D6) {
-        current.add(_stackPaint(index > 0 ? res.substring(0, index) : res,
-            element.rollResult, axisCount()));
+        current.add(DiceStackWidget(
+            imagePath: index > 0 ? res.substring(0, index) : res,
+            value: element.rollResult,
+            scale: axisCount(),
+          type: element.runtimeType,));
       }
       else {
         current.add(Image.asset(index > 0 ? res.substring(0, index) : res,
@@ -149,47 +157,5 @@ class DiceCubit extends Cubit<DiceState> {
       removeDice(removeType);
     }
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
-  }
-
-  Widget _stackPaint(String imagePath, int i, int scale, {String? text}) {
-    double size = 76.0 / scale;
-    return Stack(
-      children: [
-        Image.asset(imagePath, color: defSecClr),
-        Center(
-          child: Container(
-            height: size + 5,
-            width: size + 5,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(size / 2),
-              color: defSecClr,
-            ),
-          ),
-        ),
-        Center(
-            child: Text(
-          i.toString(),
-          style: TextStyle(
-            color: defPriClr,
-            fontSize: size,
-            fontFamily: "MarkoOne",
-            fontWeight: FontWeight.bold,
-          ),
-        )),
-        text != null
-            ? Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  text.toString(),
-                  style: TextStyle(
-                    color: defSecClr,
-                    fontSize: size/2,
-                    fontFamily: "MarkoOne",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ))
-            : Container(),
-      ],
-    );
   }
 }
