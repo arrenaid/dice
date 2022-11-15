@@ -54,12 +54,15 @@ class _DiceControllerState extends State<DiceController> {
                               state.listAllDice[index].sides.keys.first,
                               color: defSecClr)),
 
-                      Text( state.listAllDice[index].runtimeType == DCustom
-                          ? "D${state.listAllDice[index].sides.length} : "
-                          " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
-                          : "${state.listAllDice[index].runtimeType} :"
-                          " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
-                        ,style: defTs,),
+                      Expanded(
+                        child: Text( state.listAllDice[index].runtimeType == DCustom
+                            ? "D${state.listAllDice[index].sides.length} : "
+                            " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                            : "${state.listAllDice[index].runtimeType} :"
+                            " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                          ,style: defTs.copyWith(overflow: TextOverflow.fade),
+                            textAlign: TextAlign.center),
+                      ),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
