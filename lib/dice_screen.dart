@@ -28,6 +28,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
 
   @override
   void dispose() {
+    context.read<DiceCubit>().dispose();
     _controller.dispose();
     super.dispose();
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:dice/dice_stack_widget.dart';
@@ -6,13 +7,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../dice_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'dice_state.dart';
 
 class DiceCubit extends Cubit<DiceState> {
   DiceCubit()
       : super(DiceState(currentImg: [], listDice: [D6(), D6()],
       listAllDice: [D4(), D6(), D8(), D10(), D12(), D20(), AnonymousDice()],
-      rollResult: 0, rollMax: 12, status: StateStatus.initial));
+      rollResult: 0, rollMax: 12, status: StateStatus.initial)){
+    _loadCustomDice();
+    _loadDice();
+  }
+  final _sharedLengthKey = "dice_length_key";
+  final _sharedDCustomKey = "dice_custom_key";
+
+  void dispose(){
+    _saveToSharedPreferencesListDice(state.listDice);
+  }
+
 
   int _countRollMax(List<Dice> twin) {
     int result = 0;
@@ -143,6 +155,7 @@ class DiceCubit extends Cubit<DiceState> {
     twin.removeLast();
     twin.add(DCustom(length: value));
     twin.add(AnonymousDice());
+    _saveCustomDice(twin);
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
   }
 
@@ -156,6 +169,97 @@ class DiceCubit extends Cubit<DiceState> {
     while (countType(removeType) != 0) {
       removeDice(removeType);
     }
+    _saveCustomDice(twin);
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
+  }
+
+  Future<void> _saveToSharedPreferencesListDice(List<Dice> list) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Set<Dice> setDice = list as Set<Dice>;
+    List<String> jsonDataListLength = setDice.map((dice) => jsonEncode({
+      "type":dice.runtimeType,
+      "count":countType(dice)
+    }
+    )).toList();
+    prefs.setStringList(_sharedLengthKey, jsonDataListLength);
+  }
+  // Future<void> _saveToSharedPreferencesListAll(List<Dice> list) async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<DCustom> listDC = [];
+  //   for(var value in list){
+  //     if(value.runtimeType == DCustom){
+  //       listDC.add(value as DCustom);
+  //     }
+  //   }
+  //   List<String> jsonDataListCustom = listDC.map((dice) => jsonEncode({
+  //     "name":dice.sides.length,
+  //     "gg":"wp",
+  //     "horus":1613
+  //   }
+  //   )).toList();
+  //   prefs.setStringList(_sharedDCustomKey, jsonDataListCustom);
+  // }
+  Future<void> _saveCustomDice(List<Dice> list) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> result = [];
+    for(var value in list){
+      if(value.runtimeType == DCustom){
+        result.add(value.sides.length.toString());
+      }
+    }
+    prefs.setStringList(_sharedDCustomKey, result);
+  }
+  Future<void> _loadCustomDiceSimple() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<int> result = [];
+    final List<String>? stringList = prefs.getStringList(
+        _sharedDCustomKey);
+    if (stringList!.isNotEmpty) {
+      for(var value in stringList){
+        result.add(int.parse(value));
+      }
+    }
+    for(int i in result){
+      insertCustomDice(i);
+    }
+  }
+  Future<void> _loadCustomDice() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<int> listDC = [];
+    final List<String>? jsonStringListDC = prefs.getStringList(
+        _sharedDCustomKey);
+    if (jsonStringListDC!.isNotEmpty) {
+      for (var jPost in jsonStringListDC!) {
+        final Map<String,dynamic> map = await json.decode(jPost) as Map<String,dynamic>;
+        listDC.add(map["name"] as int);
+      }
+    }
+    for(int i in listDC){
+      insertCustomDice(i);
+    }
+  }
+    Future<void> _loadDice() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final Map<String,int> mapLength = {};
+    List<Dice> all = state.listAllDice;
+    final List<String>? jsonStringList = prefs.getStringList(_sharedLengthKey);
+
+    if(jsonStringList!.isNotEmpty){
+      for(var jPost in jsonStringList!){
+        final Map<String,dynamic> map = await json.decode(jPost) as Map<String,dynamic>;
+        final Type name = map["type"] as Type;
+        final count = map["count"] as int;
+        mapLength.addAll({name.toString():count});
+      }
+    }
+
+    for(var value in mapLength.keys){
+      for(var el in all){
+        if(value == el.runtimeType){
+          addDice(el);
+        }
+      }
+    }
+    //emit(state.copyWith(,status: StateStatus.loaded));
   }
 }
