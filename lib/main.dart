@@ -1,7 +1,7 @@
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dice_screen.dart';
+import 'screens/dice_screen.dart';
 
 void main() {
   runApp(const MyApp());

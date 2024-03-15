@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'package:dice/bottom_sheet_widget.dart';
+import 'package:dice/screens/bottom_sheet_widget.dart';
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'constants.dart';
+import '../constants.dart';
 
 class DiceScreen extends StatefulWidget  {
   const DiceScreen({Key? key}) : super(key: key);

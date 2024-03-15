@@ -1,9 +1,12 @@
 import 'package:dice/cubit/dice_cubit.dart';
+import 'package:dice/screens/dice_custom_side_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'constants.dart';
-import 'dice_model.dart';
+import '../constants.dart';
+import '../dice_model.dart';
+import 'package:flutter_bouncing_widgets/flutter_bouncing_widgets.dart';
 
 class DiceController extends StatefulWidget {
   @override
@@ -22,14 +25,19 @@ class _DiceControllerState extends State<DiceController> {
       return Scaffold(
           backgroundColor: defPriClr,
           body: ListView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemCount: state.listAllDice.length,//listAllDice.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
                 child: state.listAllDice[index].runtimeType == AnonymousDice
-                    ? addCustomDiceRow(context)
+                    ? Column(
+                      children: [
+                        addCustomDiceRow(context),
+                        addCustomSideDice(),
+                      ],
+                    )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -105,8 +113,29 @@ class _DiceControllerState extends State<DiceController> {
           ));
     });
   }
+  /// Добавляем кость с настраиваемыми сторонами
+  Widget addCustomSideDice() {
+    return BounceElevatedButton(
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          elevation: 15,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          builder: (_) => CustomSideDiceSheet(),
+        );
+      },
+      child: Icon(
+        CupertinoIcons.cube,
+        color: defPriClr,
+      ),
+      borderRadius: BorderRadius.circular(30),
+      color: defSecClr,
+    );
+  }
 
-  Widget addCustomDiceRow(BuildContext context){
+  Widget addCustomDiceRow(BuildContext context, ){
     int lengthValue = 1;
     return isVisible
         ? Row(
