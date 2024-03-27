@@ -37,7 +37,7 @@ class DiceStackWidget extends StatelessWidget {
 
   double getDefSize(Type type, BuildContext context) {
     switch (type) {
-      case DCustom:
+      case DiceInfinite:
         return MediaQuery.of(context).size.width / 4;
       // case D4: return const FractionalOffset(0.5, 0.4);
       // case D20: return const FractionalOffset(0.5, 0.55);

@@ -47,7 +47,7 @@ class DiceCubit extends Cubit<DiceState> {
       String res = element.roll();
       count += element.sides[res]!;
       int index = res.indexOf("-");
-      if (element.runtimeType == DCustom) {
+      if (element.runtimeType == DiceInfinite) {
         //DCustom ?proxy = element as DCustom;
         current.add(DiceStackWidget(
             imagePath: index > 0 ? res.substring(0, index) : res,
@@ -89,7 +89,7 @@ class DiceCubit extends Cubit<DiceState> {
     emit(state.copyWith(status: StateStatus.loading));
     List<Dice> twin = state.listDice;
     if (length != null)
-      twin.add(DCustom(length: length));
+      twin.add(DiceInfinite(length: length));
     else
       twin.add(dice);
     _saveListDice(twin);
@@ -105,7 +105,7 @@ class DiceCubit extends Cubit<DiceState> {
     if (twin.length > 1) {
       for (int i = 0; i < twin.length; i++) {
         if (twin[i].runtimeType == type.runtimeType) {
-          if (type.runtimeType != DCustom) {
+          if (type.runtimeType != DiceInfinite) {
             twin.removeAt(i);
           } else if (twin[i] == type) {
             twin.removeAt(i);
@@ -127,7 +127,7 @@ class DiceCubit extends Cubit<DiceState> {
     int result = 0;
     List<Dice> list = state.listDice;
     for (int i = 0; i < list.length; i++) {
-      if (type.runtimeType != DCustom) {
+      if (type.runtimeType != DiceInfinite) {
         if (list[i].runtimeType == type.runtimeType) {
           result += 1;
         }
@@ -156,11 +156,11 @@ class DiceCubit extends Cubit<DiceState> {
     return result;
   }
 
-  insertCustomDice(int value) {
+  insertDiceInfinite(int value) {
     emit(state.copyWith(status: StateStatus.loading));
     List<Dice> twin = state.listAllDice;
     twin.removeLast();
-    twin.add(DCustom(length: value));
+    twin.add(DiceInfinite(length: value));
     twin.add(AnonymousDice());
     _saveCustomDice(twin);
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
@@ -180,6 +180,16 @@ class DiceCubit extends Cubit<DiceState> {
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
   }
 
+  insertDiceCustomSide(List<int> valueList) {
+    emit(state.copyWith(status: StateStatus.loading));
+    List<Dice> twin = state.listAllDice;
+    twin.removeLast();
+    twin.add(DiceCustomSide(valueList));
+    twin.add(AnonymousDice());
+    //_saveCustomDice(twin);
+    emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
+  }
+
   Future<void> _saveListDice(List<Dice> list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> jsonDataListLength = list
@@ -195,7 +205,7 @@ class DiceCubit extends Cubit<DiceState> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> result = [];
     for (var value in list) {
-      if (value.runtimeType == DCustom) {
+      if (value.runtimeType == DiceInfinite) {
         result.add(value.sides.length.toString());
       }
     }
@@ -213,7 +223,7 @@ class DiceCubit extends Cubit<DiceState> {
         }
       }
       for (int i in result) {
-        insertCustomDice(i);
+        insertDiceInfinite(i);
       }
     } catch (e) {
       print("--error--$e");

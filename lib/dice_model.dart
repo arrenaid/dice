@@ -102,29 +102,64 @@ class D20 extends Dice{
     "dice/d20.png-19" : 20
   };
 }
-class DCustom extends Dice {
-  DCustom({int? length = 100} ){
+class DiceInfinite extends Dice {
+  //Хранит сколько сторон
+  late int sideLength;
+  @override
+  Map<String, int> sides = {};
+
+  DiceInfinite({int? length = 100} ){
     Map<String, int> map = {
       "dice/dicecustom.png" : 1
     };
     while(map.length != length) {
       map.addAll({"dice/dicecustom.png-${map.length + 1}": map.length + 1} );
     }
+    sideLength = length!;
     sides = map;
   }
-  @override
-  Map<String, int> sides = {};
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DCustom &&
+      other is DiceInfinite &&
           runtimeType == other.runtimeType &&
           sides == other.sides;
 
   @override
   int get hashCode => sides.hashCode;
+
+  @override
+  String roll(){
+    //получаем хранимую картинку
+    String roll =  "dice/dicecustom.png";//sides.keys.elementAt(Random().nextInt(sides.length));
+    _rollResult = Random().nextInt(sideLength);
+    return roll;
+  }
+
 }
 class AnonymousDice extends Dice{
   @override
   Map<String, int> get sides => throw UnimplementedError();
+}
+/// кость с задаваемой стороной
+class DiceCustomSide extends Dice{
+  @override
+  Map<String, int> sides = {};
+
+
+  DiceCustomSide(List<int> sideList){
+    Map<String, int> map = {};
+    for(int side in sideList){
+      map.addAll({
+        map.length == 0
+          ? "dice/dicepentagon.png"
+          :"dice/dicepentagon.png-${map.length}": side} );
+    }
+    sides = map;
+  }
+
+  @override
+  int get hashCode => sides.hashCode;
+
 }

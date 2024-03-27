@@ -41,7 +41,7 @@ class _DiceControllerState extends State<DiceController> {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      state.listAllDice[index].runtimeType == DCustom
+                      state.listAllDice[index].runtimeType == DiceInfinite
                       ? ElevatedButton(
                         onPressed: () => context.read<DiceCubit>().removeCustomDice(index),
                         child: Text("del",style: defTs,),
@@ -63,8 +63,11 @@ class _DiceControllerState extends State<DiceController> {
                               color: defSecClr)),
 
                       Expanded(
-                        child: Text( state.listAllDice[index].runtimeType == DCustom
+                        child: Text( state.listAllDice[index].runtimeType == DiceInfinite
                             ? "D${state.listAllDice[index].sides.length} : "
+                            " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                            : state.listAllDice[index].runtimeType == DiceCustomSide
+              ?"DCS${state.listAllDice[index].sides.length} : "
                             " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
                             : "${state.listAllDice[index].runtimeType} :"
                             " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
@@ -181,7 +184,7 @@ class _DiceControllerState extends State<DiceController> {
               _formKey.currentState!.save();
               setState(() {
                 isVisible = false;
-                context.read<DiceCubit>().insertCustomDice(lengthValue);
+                context.read<DiceCubit>().insertDiceInfinite(lengthValue);
               });
               ScaffoldMessenger.of(context).showSnackBar(MySnackBar("Add Custom Dice"));
             } else {

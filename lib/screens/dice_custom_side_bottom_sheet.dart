@@ -2,7 +2,10 @@ import 'package:dice/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
+
+import '../cubit/dice_cubit.dart';
 
 class CustomSideDiceSheet extends StatefulWidget {
   @override
@@ -13,7 +16,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
 
   final _formKey = GlobalKey<FormState>();
   bool isVisible = false;
-  List<double> sidesDice= [];
+  List<int> sidesDice= [];
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +29,11 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
     child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Add dice dc' + sidesDice.length.toString(),style: defTs, textAlign: TextAlign.center,),
+            Text('Add dice custome side' + sidesDice.length.toString(),style: defTs, textAlign: TextAlign.center,),
             Divider(),
             BounceElevatedButton(
               onPressed: () {
+                context.read<DiceCubit>().insertDiceCustomSide(sidesDice);
                 Navigator.pop(context);
               },
               child: Icon(CupertinoIcons.paperclip, color: defBtnClr,),
@@ -126,7 +130,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
               _formKey.currentState!.save();
               setState(() {
                 isVisible = false;
-                sidesDice.add(formValue.toDouble());
+                sidesDice.add(formValue);
               });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
