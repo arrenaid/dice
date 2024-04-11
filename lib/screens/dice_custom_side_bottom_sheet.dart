@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
 
 import '../cubit/dice_cubit.dart';
+import 'bottom_sheet_widget.dart';
 
 class CustomSideDiceSheet extends StatefulWidget {
   @override
@@ -15,8 +16,8 @@ class CustomSideDiceSheet extends StatefulWidget {
 class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
 
   final _formKey = GlobalKey<FormState>();
-  bool isVisible = false;
-  List<int> sidesDice= [];
+  bool _isVisible = false;
+  final List<int> _sides= [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +30,44 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
     child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Add dice custome side' + sidesDice.length.toString(),style: defTs, textAlign: TextAlign.center,),
-            Divider(),
-            BounceElevatedButton(
-              onPressed: () {
-                context.read<DiceCubit>().insertDiceCustomSide(sidesDice);
-                Navigator.pop(context);
-              },
-              child: Icon(CupertinoIcons.paperclip, color: defBtnClr,),
-              color: defSecClr,
-              borderRadius: BorderRadius.circular(30),
+            const Text('Add dice with a customizable side',
+              style: defTs,
+              textAlign: TextAlign.center,
             ),
-            Text('Add side',style: defTs,),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Dc' +  _sides.length.toString(),
+                  style: defTs
+                ),
+                BounceElevatedButton(
+                  onPressed: () {
+                    if(_sides.length > 1) {
+                      context.read<DiceCubit>().insertDiceCustomSide(_sides);
+                      Navigator.pop(context);
+                    }else{
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(MySnackBar("Few sides"));
+                    }
+                  },
+                  child: Text('Save Dice',
+                    style: defTs.copyWith(color: defBtnClr, shadows: []),), //Icon(CupertinoIcons.paperclip, color: defBtnClr,),
+                  color: defSecClr,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ],
+            ),
+            Text('Add side:',style: defTs,),
             addSide(context),
-            SizedBox(height: 300,
+            SizedBox(
+                height: 300,
             child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-              itemCount: sidesDice.length,
+              itemCount: _sides.length,
 
                 itemBuilder: (item, index){
-                  return sidesDice.length < 1
+                  return _sides.length < 1
                       ? Text('empty', style: defTs,)
                       : Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -56,11 +75,11 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('side ' + ((index + 1).toString()), style: defTs,),
-                            Text(sidesDice[index].toString(), style: defTs,),
+                            Text(_sides[index].toString(), style: defTs,),
                             BounceElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  sidesDice.removeAt(index);
+                                  _sides.removeAt(index);
                                 });
                               },
                               child: SizedBox(
@@ -77,6 +96,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                 }
             )
             ),
+
           ],
         ),
       ),
@@ -86,7 +106,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
 
   Widget addSide(BuildContext context, ){
     int formValue = 1;
-    return isVisible
+    return _isVisible
         ? Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -95,7 +115,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
           child: Container(
             width: MediaQuery.of(context).size.width/2,
             child: TextFormField(
-              decoration: InputDecoration(hintText: "Dice number",
+              decoration: const InputDecoration(hintText: "Number side",
                 hintStyle: defTs ,
                 suffixStyle: defTs,
                 labelStyle: defTs,
@@ -129,8 +149,8 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
               setState(() {
-                isVisible = false;
-                sidesDice.add(formValue);
+                _isVisible = false;
+                _sides.add(formValue);
               });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -163,7 +183,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
       child: ElevatedButton(
         onPressed: () {
           setState(() {
-            isVisible = true;
+            _isVisible = true;
           });
         },
         child: Icon(

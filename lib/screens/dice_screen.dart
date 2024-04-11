@@ -86,7 +86,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                       ),
                       Center(
                         child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
