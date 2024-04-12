@@ -142,7 +142,8 @@ class DiceCubit extends Cubit<DiceState> {
     if (twin.length > 1) {
       for (int i = 0; i < twin.length; i++) {
         if (twin[i].runtimeType == type.runtimeType) {
-          if (type.runtimeType != DiceInfinite) {
+          if (type.runtimeType != DiceInfinite
+              && type.runtimeType != DiceCustomSide) {
             twin.removeAt(i);
           } else if (twin[i] == type) {
             twin.removeAt(i);
@@ -163,26 +164,35 @@ class DiceCubit extends Cubit<DiceState> {
   int countType(Dice type) {
     int result = 0;
     List<Dice> list = state.listDice;
-    for (int i = 0; i < list.length; i++) {
-      if (type.runtimeType != DiceInfinite) {
-        if (list[i].runtimeType == type.runtimeType) {
-          result += 1;
-        }
-      } else {
-        if (list[i] == type) {
+    for(var element in list){
+      if(type.runtimeType != AnonymousDice){
+        if(element == type){
           result += 1;
         }
       }
     }
+
+    // for (int i = 0; i < list.length; i++) {
+    //   if (type.runtimeType != DiceInfinite
+    //       && type.runtimeType != DiceCustomSide) {
+    //     if (list[i].runtimeType == type.runtimeType) {
+    //       result += 1;
+    //     }
+    //   } else {
+    //     if (list[i] == type) {
+    //       result += 1;
+    //     }
+    //   }
+    // }
     return result;
   }
 
   int axisCount() {
     int len = state.listDice.length;
     int result = 1;
-    if (len != 1 && len <= 4)
+    if (len != 1 && len <= 4) {
       result = 2;
-    else {
+    } else {
       if (len > 4) {
         result = 3;
         if (len > 9) {
@@ -291,6 +301,7 @@ class DiceCubit extends Cubit<DiceState> {
         insertDiceInfinite(i);
       }
     } catch (e) {
+      emit(state.copyWith(status: StateStatus.error));
       print("--error--$e");
     }
   }
@@ -347,7 +358,7 @@ class DiceCubit extends Cubit<DiceState> {
       print("--error-dice-length--$e");
       addDice(D6());
       addDice(D6());
-      addDice(AnonymousDice());
+      //addDice(AnonymousDice());
     }
   }
 

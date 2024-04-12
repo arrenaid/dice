@@ -196,7 +196,7 @@ class D20 extends Dice{
 }
 ///кость любым числом сторон
 class DiceInfinite extends Dice {
-  //Хранит число сторон
+  ///Хранит число сторон для того что бы генерировать сторону только когда она будет вызвана
   late int sideCount;
   final _img =  "dice/dicecustom.png";
   @override
@@ -205,18 +205,6 @@ class DiceInfinite extends Dice {
   DiceInfinite({int? length = 100} ){
     sides.add(Side(_img, 1));
     sideCount = length!;
-
-  // Map<String, int> sides = {};
-  //
-  // DiceInfinite({int? length = 100} ){
-  //   Map<String, int> map = {
-  //     "dice/dicecustom.png" : 1
-  //   };
-  //   while(map.length != length) {
-  //     map.addAll({"dice/dicecustom.png-${map.length + 1}": map.length + 1} );
-  //   }
-  //   sideLength = length!;
-  //   sides = map;
   }
 
   @override
@@ -231,9 +219,6 @@ class DiceInfinite extends Dice {
 
   @override
   Side getSide(){
-    //получаем хранимую картинку
-    //sides.keys.elementAt(Random().nextInt(sides.length));
-    //_rollResult = Random().nextInt(sideLength);
     Side result = Side(_img,Random().nextInt(sideCount));
     sides.add(result);
     return result;
@@ -244,6 +229,7 @@ class AnonymousDice extends Dice{
   @override
   List<Side> get sides => throw UnimplementedError();
 }
+
 /// кость с задаваемым числом стороны
 /// предыдущие кости в качестве числа стороны имели свой порядковый номер
 ///
@@ -259,21 +245,16 @@ class DiceCustomSide extends Dice{
     }
     check = (check/sideList.length).ceil();
   }
-  // Map<String, int> sides = {};
-  //
-  //
-  // DiceCustomSide(List<int> sideList){
-  //   Map<String, int> map = {};
-  //   for(int side in sideList){
-  //     map.addAll({
-  //       map.length == 0
-  //         ? "dice/dicepentagon.png"
-  //         :"dice/dicepentagon.png-${map.length}": side} );
-  //   }
-  //   sides = map;
-  // }
 
   @override
-  int get hashCode => sides.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is DiceCustomSide &&
+              runtimeType == other.runtimeType &&
+              check == other.check &&
+              sides == other.sides;
+
+  @override
+  int get hashCode => sides.hashCode + sides.first.hashCode + check.hashCode;
 
 }

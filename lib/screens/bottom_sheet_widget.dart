@@ -182,7 +182,7 @@ class _DiceControllerState extends State<DiceController> {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 2,
                   child: TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Dice number",
                       hintStyle: defTs,
                       suffixStyle: defTs,
