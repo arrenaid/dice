@@ -249,7 +249,8 @@ class DiceCubit extends Cubit<DiceState> {
     List<String> result = [];
     for (var value in list) {
       if (value.runtimeType == DiceInfinite) {
-        result.add(value.sides.length.toString());
+        value as DiceInfinite;
+        result.add(value.sideCount.toString());
       }
     }
     prefs.setStringList(_sharedDInfiniteKey, result);
@@ -297,13 +298,19 @@ class DiceCubit extends Cubit<DiceState> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final List<String>? stringListLength = prefs.getStringList(_sharedDCSLengthListKey);
+      List<List<int>> data = [];
       if (stringListLength!.isNotEmpty) {
         for (var value in stringListLength) {
           final List<String>? sides = prefs.getStringList(_sharedDCSSidesKey + value);
           if(sides!.isNotEmpty){
-            insertDiceCustomSide(sides.cast<int>());
+            List<int> _dataCast = List.generate(sides.length, (index)
+            => int.parse(sides[index]));
+            data.add(_dataCast);
           }
         }
+      }
+      for(var side in data){
+        insertDiceCustomSide(side);
       }
     } catch (e) {
       print("--error--$e");
@@ -340,6 +347,7 @@ class DiceCubit extends Cubit<DiceState> {
       print("--error-dice-length--$e");
       addDice(D6());
       addDice(D6());
+      addDice(AnonymousDice());
     }
   }
 
