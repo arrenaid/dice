@@ -47,11 +47,26 @@ class DiceStackWidget extends StatelessWidget {
 
   double getDefSize(Type type, BuildContext context) {
     switch (type) {
-      case DiceInfinite:
+      case DiceInfinite: if(value > 9999 ){
+        return MediaQuery.of(context).size.width / 8;
+      } else if(value > 999 ){
+        return MediaQuery.of(context).size.width / 6;
+      } else if(value > 99){
+        return MediaQuery.of(context).size.width / 5;
+      } else {
         return MediaQuery.of(context).size.width / 4;
+      }
+      case DiceCustomSide: if(value > 9999 ){
+        return MediaQuery.of(context).size.width / 8;
+      } else if(value > 99){
+        return MediaQuery.of(context).size.width / 5;
+        } else{
+    return MediaQuery.of(context).size.width / 3;
+      }
       // case D4: return const FractionalOffset(0.5, 0.4);
       // case D20: return const FractionalOffset(0.5, 0.55);
       // case D8: return const FractionalOffset(0.5, 0.45);
+
       default:
         return MediaQuery.of(context).size.width / 5;
     }
@@ -96,7 +111,7 @@ class DiceStackWidget extends StatelessWidget {
         text != null
             ? Align(
                 alignment: type != DiceInfinite
-                    ? const FractionalOffset(0.65, 0.87)
+                    ? const FractionalOffset(0.69, 0.89)
                     : const FractionalOffset(0.6, 0.7),
                 child: ShaderMask(
                   blendMode: BlendMode.srcIn,

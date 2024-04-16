@@ -29,7 +29,8 @@ class RollButton extends StatelessWidget {
                 end: Alignment.bottomCenter,
             tileMode:  TileMode.clamp,
             //stops: [0.1,0.99],
-    colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
+              colors: [/*Colors.white*/defSecClr,defSecClr],
+    // colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
             //colors: [Colors.white70, defBtnClr])
             )
     ),

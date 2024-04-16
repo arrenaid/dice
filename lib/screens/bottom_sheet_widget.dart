@@ -89,11 +89,11 @@ class _DiceControllerState extends State<DiceController> {
                               child: Text(
                                   state.listAllDice[index].runtimeType ==
                                           DiceInfinite
-                                      ? "D${context.read<DiceCubit>().InfiniteLength(state.listAllDice[index])} : "
+                                      ? "D${context.read<DiceCubit>().InfiniteLength(state.listAllDice[index])} :"
                                           " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
                                       : state.listAllDice[index].runtimeType ==
                                               DiceCustomSide
-                                          ? "Dc${state.listAllDice[index].sides.length} : "
+                                          ? "Dc${state.listAllDice[index].sides.length} :"
                                               " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
                                           : "${state.listAllDice[index].runtimeType} :"
                                               " ${context.read<DiceCubit>().countType(state.listAllDice[index])}",

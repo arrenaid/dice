@@ -126,7 +126,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                                           //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
                                           //sizeFactor: ,
 
-                                          scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),
+                                          scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),//end: 1.2
                                           child: Text("${state.rollResult}",
                                     style: defTs.copyWith(fontSize: 100),
                                   ),
@@ -157,25 +157,32 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                       children: [
                         Center(
                           child:
-                          RollButton(
-                            onPressed: () {_controller.forward().whenComplete(() {
-            context.read<DiceCubit>().roll();
-            _controller.reverse();});
-            },
-                            onLongPress: () {
-                              _controller.forward();
-                              showModalBottomSheet(
-                                context: context,
-                                elevation: 15,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                builder: (_) => DiceController(),
-                              );
-                            },
-                            child: Text("ROLL",
-                                  style: defTs.copyWith(fontSize: 40,shadows: []),
-                                ),
+                          ScaleTransition(
+                            //,
+                            //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
+                            //sizeFactor: ,
+
+                            scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.9)),//end: 1.2
+                            child: RollButton(
+                              onPressed: () {_controller.forward().whenComplete(() {
+                                        context.read<DiceCubit>().roll();
+                                        _controller.reverse();});
+                                        },
+                              onLongPress: () {
+                                _controller.forward();
+                                showModalBottomSheet(
+                                  context: context,
+                                  elevation: 15,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  builder: (_) => DiceController(),
+                                );
+                              },
+                              child: Text("ROLL",
+                                    style: defTs.copyWith(color: defBtnClr,fontSize: 40,shadows: []),
+                                  ),
+                            ),
                           ),
                           // MaterialButton(
                           //   padding: const EdgeInsets.symmetric(

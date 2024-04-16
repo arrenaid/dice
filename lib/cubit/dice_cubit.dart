@@ -226,7 +226,7 @@ class DiceCubit extends Cubit<DiceState> {
 
     if(removeType.runtimeType == DiceInfinite) {
       _saveDiceInfinite(twin);
-    }else if(removeType.runtimeType == DiceInfinite) {
+    }else if(removeType.runtimeType == DiceCustomSide) {
       _saveDiceCustomSide(twin);
     }
     emit(state.copyWith(status: StateStatus.loaded, listAllDice: twin));
