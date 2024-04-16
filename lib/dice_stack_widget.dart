@@ -11,6 +11,15 @@ class DiceStackWidget extends StatelessWidget {
   late FractionalOffset offset;
   late double size;
 
+  final gradient  =  const LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    tileMode:  TileMode.clamp,
+    //stops: [0.1,0.99],
+    colors: [defPriClr,defBtnClr],
+    //colors: [Colors.white70, defBtnClr])
+  );
+
   DiceStackWidget(
       {Key? key,
       required this.imagePath,
@@ -23,11 +32,12 @@ class DiceStackWidget extends StatelessWidget {
   FractionalOffset getOffset(Type type) {
     switch (type) {
       case D10:
+        case DiceCustomSide:
         return const FractionalOffset(0.5, 0.3);
       case D4:
-        return const FractionalOffset(0.5, 0.35);
+        return const FractionalOffset(0.5, 0.4);
       case D20:
-        return const FractionalOffset(0.5, 0.58);
+        return const FractionalOffset(0.5, 0.63);
       case D8:
         return const FractionalOffset(0.5, 0.45);
       default:
@@ -54,39 +64,53 @@ class DiceStackWidget extends StatelessWidget {
     return Stack(
       children: [
         Image.asset(imagePath, color: defSecClr),
-        text != null ? Container()
-        : Align(
-          alignment: offset,
-          child: Container(
-            height: size,
-            width: size,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(size / 2),
-              color: defSecClr,
-            ),
-          ),
-        ),
+        // text != null ? Container()
+        // : Align(
+        //   alignment: offset,
+        //   child: Container(
+        //     height: size,
+        //     width: size,
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(size / 2),
+        //       color: defSecClr,
+        //     ),
+        //   ),
+        // ),
         Align(
             alignment: offset,
-            child: Text(
-              value.toString(),
-              style: TextStyle(
-                color: text != null ? defSecClr : defPriClr,
-                fontSize: size,
-                fontFamily: "MarkoOne",
-                fontWeight: FontWeight.bold,
+            child: ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => gradient.createShader(
+                Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+              ),
+              child: Text(
+                value.toString(),
+                style: TextStyle(
+                  color: text != null ? defSecClr : defPriClr,
+                  fontSize: size,
+                  fontFamily: "MarkoOne",
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             )),
         text != null
             ? Align(
-                alignment: const FractionalOffset(0.65, 0.87),
-                child: Text(
-                  text.toString(),
-                  style: TextStyle(
-                    color: defSecClr,
-                    fontSize: size/3,
-                    fontFamily: "MarkoOne",
-                    fontWeight: FontWeight.bold,
+                alignment: type != DiceInfinite
+                    ? const FractionalOffset(0.65, 0.87)
+                    : const FractionalOffset(0.6, 0.7),
+                child: ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (bounds) => gradient.createShader(
+                    Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                  ),
+                  child: Text(
+                    text.toString(),
+                    style: TextStyle(
+                      color: defSecClr,
+                      fontSize: size/3,
+                      fontFamily: "MarkoOne",
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ))
             : Container(),

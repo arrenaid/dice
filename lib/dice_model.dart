@@ -34,12 +34,12 @@ abstract class Dice {
 class D6 extends Dice{
   @override
   List<Side> sides = [
-      Side("dice/dice1.png" , 1),
-      Side("dice/dice2.png" , 2),
-      Side("dice/dice3.png" , 3),
-      Side("dice/dice4.png" , 4),
-      Side("dice/dice5.png" , 5),
-      Side("dice/dice6.png" , 6),
+      Side("dice/d6_1.png" , 1),
+      Side("dice/d6_2.png" , 2),
+      Side("dice/d6_3.png" , 3),
+      Side("dice/d6_4.png" , 4),
+      Side("dice/d6_5.png" , 5),
+      Side("dice/d6_6.png" , 6),
   ];
   // Map<String, int> sides  = {
   //   "dice/dice1.png" : 1,
@@ -198,7 +198,7 @@ class D20 extends Dice{
 class DiceInfinite extends Dice {
   ///Хранит число сторон для того что бы генерировать сторону только когда она будет вызвана
   late int sideCount;
-  final _img =  "dice/dicecustom.png";
+  final _img =  "dice/dice_infinite.png";
   @override
   List<Side> sides = [];
 
@@ -234,7 +234,7 @@ class AnonymousDice extends Dice{
 /// предыдущие кости в качестве числа стороны имели свой порядковый номер
 ///
 class DiceCustomSide extends Dice{
-  final _img = "dice/dicepentagon.png";
+  final _img = "dice/dice_pentagon.png";
   late int check = 0;
   @override
   List<Side> sides = [];

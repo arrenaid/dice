@@ -243,7 +243,7 @@ class _DiceControllerState extends State<DiceController> {
           )
         : SizedBox(
       width: double.infinity,
-            child: BounceElevatedButton(
+            child:  BounceElevatedButton(
               onPressed: () {
                 setState(() {
                   isVisible = true;
