@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
+// import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
 import '../constants.dart';
 import '../dice_model.dart';
-import 'package:flutter_bouncing_widgets/flutter_bouncing_widgets.dart';
+// import 'package:flutter_bouncing_widgets/flutter_bouncing_widgets.dart';
 
 class DiceController extends StatefulWidget {
   @override
@@ -20,16 +20,23 @@ class _DiceControllerState extends State<DiceController> {
 
   final _formKey = GlobalKey<FormState>();
   bool isVisible = false;
+  // late final List<Dice> twinAll ;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DiceCubit, DiceState>(builder: (context, state) {
+      // twinAll = state.listAllDice;
+      // twinAll.add(AnonymousDice());
+      // if(state.listAllDice.last != AnonymousDice){
+      //   state.listAllDice.add(AnonymousDice());
+      // }
       return Scaffold(
           backgroundColor: defPriClr,
           body: ListView.builder(
             physics: const BouncingScrollPhysics(),
             itemCount: state.listAllDice.length, //listAllDice.length,
             itemBuilder: (context, index) {
+              Color currentColor =  state.listAllDice[index].color;//colorGenerator.generate();
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
@@ -59,20 +66,26 @@ class _DiceControllerState extends State<DiceController> {
                                     children: [
                                       Image.asset(
                                           state.listAllDice[index].sides.first.image,
-                                      color: defSecClr,
+                                      color: currentColor,//defSecClr,
                                       ),
                                       Align(
                                         alignment: const FractionalOffset(0.5,0.5),
-                                        child: BounceElevatedButton(
+                                        child: /*Bounce*/IconButton(
                                           onPressed: () => context
                                               .read<DiceCubit>()
                                               .removeDiceInfinite(index),
-                                          child: const Icon(
+                                          icon: const Icon(
                                             CupertinoIcons.delete_solid,
                                             color: defSecClr,
                                           ),
-                                          borderRadius: BorderRadius.circular(30),
-                                          color: defBtnClr,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: defBtnClr,
+                                            elevation: 3,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30)),
+                                          ),
+/*                                          borderRadius: BorderRadius.circular(30),
+                                          color: defBtnClr,*/
                                         ),
                                       ),
                                     ],
@@ -84,22 +97,24 @@ class _DiceControllerState extends State<DiceController> {
                                     child: Image.asset(
                                         state.listAllDice[index].sides.first
                                             .image,
-                                        color: defSecClr)),
+                                        color: currentColor, /*defSecClr*/)),
                             Expanded(
                               child: Text(
-                                  state.listAllDice[index].runtimeType ==
-                                          DiceInfinite
-                                      ? "D${context.read<DiceCubit>().InfiniteLength(state.listAllDice[index])} :"
-                                          " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
-                                      : state.listAllDice[index].runtimeType ==
-                                              DiceCustomSide
-                                          ? "Dc${state.listAllDice[index].sides.length} :"
-                                              " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
-                                          : "${state.listAllDice[index].runtimeType} :"
-                                              " ${context.read<DiceCubit>().countType(state.listAllDice[index])}",
-                                  style: defTs.copyWith(
-                                      overflow: TextOverflow.fade),
-                                  textAlign: TextAlign.center),
+                              state.listAllDice[index].runtimeType ==
+                                  DiceInfinite
+                                  ? "D${context.read<DiceCubit>().infiniteLength(state.listAllDice[index])} -"
+                                  " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                                  : state.listAllDice[index].runtimeType ==
+                                  DiceCustomSide
+                                  ? "Dc${state.listAllDice[index].sides.length} -"
+                                  " ${context.read<DiceCubit>().countType(state.listAllDice[index])}"
+                                  : "${state.listAllDice[index].runtimeType} -"
+                                  " ${context.read<DiceCubit>().countType(state.listAllDice[index])}",
+                              style: defTs.copyWith(
+                                shadows: [],
+                                  color: currentColor,
+                                  overflow: TextOverflow.fade),
+                              textAlign: TextAlign.center),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -113,7 +128,7 @@ class _DiceControllerState extends State<DiceController> {
                                     color: defPriClr,
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: defSecClr,
+                                    backgroundColor: currentColor /*defSecClr*/,
                                     elevation: 3,
                                     shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
@@ -123,7 +138,7 @@ class _DiceControllerState extends State<DiceController> {
                                 ),
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: defSecClr,
+                                      backgroundColor: currentColor,/*defSecClr,*/
                                       elevation: 3,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
@@ -134,7 +149,7 @@ class _DiceControllerState extends State<DiceController> {
                                     onPressed: () => context
                                         .read<DiceCubit>()
                                         .removeDice(state.listAllDice[index]),
-                                    child: Icon(Icons.close, color: defPriClr)),
+                                    child: const Icon(Icons.close, color: defPriClr)),
                               ],
                             )
                           ]),
@@ -146,7 +161,7 @@ class _DiceControllerState extends State<DiceController> {
 
   /// Добавляем кость с настраиваемыми сторонами
   Widget addCustomSideDice() {
-    return BounceElevatedButton(
+    return /*Bounce*/ElevatedButton(
       onPressed: () {
         showModalBottomSheet(
           context: context,
@@ -157,15 +172,22 @@ class _DiceControllerState extends State<DiceController> {
           builder: (_) => CustomSideDiceSheet(),
         );
       },
-      child: SizedBox.expand(
+      child: SizedBox(
+        width: double.infinity,
         child: Text(
           'customizable dice',
           style: defTs.copyWith(color: defPriClr, shadows: []),
           textAlign: TextAlign.center,
         ),
       ),
-      borderRadius: BorderRadius.circular(30),
-      color: defSecClr,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: defSecClr,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30)),
+      ),
+      // borderRadius: BorderRadius.circular(30),
+      // color: defSecClr,
     );
   }
 
@@ -205,6 +227,9 @@ class _DiceControllerState extends State<DiceController> {
                       if (int.parse(value) < 1) {
                         return "pls enter number > 0...";
                       }
+                      if (int.parse(value) > maxIntRandom) {
+                        return "pls enter number < $maxIntRandom...";
+                      }
                       return null;
                     },
                     onFieldSubmitted: (_) => _formKey.currentState!.validate(),
@@ -243,7 +268,7 @@ class _DiceControllerState extends State<DiceController> {
           )
         : SizedBox(
       width: double.infinity,
-            child:  BounceElevatedButton(
+            child:  /*Bounce*/ElevatedButton(
               onPressed: () {
                 setState(() {
                   isVisible = true;
@@ -258,14 +283,14 @@ class _DiceControllerState extends State<DiceController> {
               //   Icons.add,
               //   color: defPriClr,
               // ),
-              // style: ElevatedButton.styleFrom(
-              //   backgroundColor: defSecClr,
-              //   elevation: 3,
-              //   shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(30)),
-              // ),
-              borderRadius: BorderRadius.circular(30),
-              color: defSecClr,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: defSecClr,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+              ),
+              // borderRadius: BorderRadius.circular(30),
+              // color: defSecClr,
             ),
           );
   }

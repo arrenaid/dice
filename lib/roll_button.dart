@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
-
+// import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
 import 'constants.dart';
 
 class RollButton extends StatelessWidget {
@@ -24,7 +23,7 @@ class RollButton extends StatelessWidget {
       width: double.infinity,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
             tileMode:  TileMode.clamp,
@@ -54,12 +53,7 @@ class RollButton extends StatelessWidget {
       ),
       // child: BounceElevatedButton(
       //   onPressed: onPressed,
-      //   child: () {
-      //     return Center(
-      //       widthFactor: widthFactor,
-      //       child: child,
-      //     );
-      //   },
+      //   child:  child,
       // //     Container(
       // //     height: 44.0,
       // //     decoration: BoxDecoration(

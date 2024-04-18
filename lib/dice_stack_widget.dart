@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 import 'constants.dart';
 import 'dice_model.dart';
 
 class DiceStackWidget extends StatelessWidget {
-  String imagePath;
-  int value;
-  int scale;
-  String? text;
-  Type type;
-  late FractionalOffset offset;
-  late double size;
+  final String imagePath;
+  final int value;
+  final int scale;
+  final String? text;
+  final Type type;
+  final Color color;
+  late final  FractionalOffset offset;
+  late final  double size;
 
   final gradient  =  const LinearGradient(
     begin: Alignment.topLeft,
@@ -26,7 +28,9 @@ class DiceStackWidget extends StatelessWidget {
       required this.value,
       required this.scale,
       required this.type,
-      this.text})
+        required this.color,
+      this.text,
+       })
       : super(key: key);
 
   FractionalOffset getOffset(Type type) {
@@ -78,7 +82,11 @@ class DiceStackWidget extends StatelessWidget {
     offset = getOffset(type);
     return Stack(
       children: [
-        Image.asset(imagePath, color: defSecClr),
+        SimpleShadow(
+            offset: const Offset(9, 9), // Default: Offset(2, 2)
+            color: Colors.black,//defBtnClr,
+            sigma: 3.5,
+            child: Image.asset(imagePath, color: color)),//defSecClr
         // text != null ? Container()
         // : Align(
         //   alignment: offset,

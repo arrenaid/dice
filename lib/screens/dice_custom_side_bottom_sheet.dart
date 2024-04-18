@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
-
 import '../cubit/dice_cubit.dart';
 import 'bottom_sheet_widget.dart';
 
@@ -34,14 +32,14 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
               style: defTs,
               textAlign: TextAlign.center,
             ),
-            Divider(),
+            const Divider( color: defSecClr,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Dc' +  _sides.length.toString(),
                   style: defTs
                 ),
-                BounceElevatedButton(
+                ElevatedButton(
                   onPressed: () {
                     if(_sides.length > 1) {
                       context.read<DiceCubit>().insertDiceCustomSide(_sides);
@@ -53,15 +51,21 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                   },
                   child: Text('Save Dice',
                     style: defTs.copyWith(color: defBtnClr, shadows: []),), //Icon(CupertinoIcons.paperclip, color: defBtnClr,),
-                  color: defSecClr,
-                  borderRadius: BorderRadius.circular(30),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: defSecClr,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                  // color: defSecClr,
+                  // borderRadius: BorderRadius.circular(30),
                 ),
               ],
             ),
             Text('Add side:',style: defTs,),
             addSide(context),
             SizedBox(
-                height: 300,
+                height: MediaQuery.of(context).size.height/3,
             child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
               itemCount: _sides.length,
@@ -76,7 +80,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                           children: [
                             Text('side ' + ((index + 1).toString()), style: defTs,),
                             Text(_sides[index].toString(), style: defTs,),
-                            BounceElevatedButton(
+                            /*Bounce*/ElevatedButton(
                               onPressed: () {
                                 setState(() {
                                   _sides.removeAt(index);
@@ -87,8 +91,14 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                                 child: Icon(CupertinoIcons.delete_solid,
                                   color: defBtnClr,),
                               ),
-                              color: defSecClr,
-                              borderRadius: BorderRadius.circular(30),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: defSecClr,
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                              ),
+                              // color: defSecClr,
+                              // borderRadius: BorderRadius.circular(30),
                             ),
                           ],
                         ),
@@ -134,8 +144,11 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                 if (value!.isEmpty) {
                   return "pls enter...";
                 }
-                if (int.parse(value) < 1) {
-                  return "pls enter number > 0...";
+                if (int.parse(value) < -maxIntRandom) {
+                  return "pls enter a larger number...";
+                }
+                if (int.parse(value) > maxIntRandom) {
+                  return "pls enter number < $maxIntRandom...";
                 }
                 return null;
               },
@@ -160,12 +173,12 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                   elevation: 35,
                   duration: const Duration(seconds: 3),
                   backgroundColor:defBtnClr,
-                  content: Text( 'error form',
+                  content: const Text( 'error form',
                     style: defTs,
                     textAlign: TextAlign.center,)));
             }
           },
-          child: Icon(
+          child: const Icon(
             Icons.add,
             color: defPriClr,
           ),
@@ -178,7 +191,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
         ),
       ],
     )
-        :Container(
+        :SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
@@ -186,7 +199,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
             _isVisible = true;
           });
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: defPriClr,
         ),

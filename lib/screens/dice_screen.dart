@@ -38,10 +38,14 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return BlocBuilder<DiceCubit,DiceState>(
       builder: (context, state) {
+        // if(state.status == StateStatus.error){
+        //   ScaffoldMessenger.of(context)
+        //       .showSnackBar(MySnackBar("Error" + state.currentImg.toString()));
+        // }
         return Scaffold(
           //backgroundColor: defPriClr,
           body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
         // gradient: LinearGradient(
         // begin: Alignment.topCenter,
         // end: Alignment.bottomCenter,
@@ -52,7 +56,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
         //   //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
         //     colors: [Color(0xFF43cea2 ),Color(0xFF185a9d)],//Endless River
         // )
-          gradient: const RadialGradient(
+          gradient: RadialGradient(
              colors: [defPriClr, Colors.black],
             //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
             radius: 1.7,
@@ -101,7 +105,7 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                                           scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.1)),
                                           child: Container(
                                             padding: const EdgeInsets.all(8.0),
-                                            child:  state.currentImg[index],//Image(image: state.currentImg[index].image, color: defSecClr),
+                                            child: state.currentImg[index] //Image(image: state.currentImg[index].image, color: defSecClr),
                                           ),
                                         ),
                                       ),
