@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:dice/screens/dice_custom_side_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -295,9 +296,31 @@ class _DiceControllerState extends State<DiceController> {
           );
   }
 }
+// snackBar2(BuildContext context){
+//   Flushbar(
+//     flushbarPosition: FlushbarPosition.TOP,
+//     flushbarStyle: FlushbarStyle.FLOATING,
+//     titleText: const Text(
+//       'Ошибка',
+//       style: tsCity,
+//     ),
+//     messageText: Text(
+//       state.message,
+//       style: tsMini,
+//     ),
+//     duration: const Duration(seconds: 5),
+//     isDismissible: false,
+//     borderRadius: BorderRadius.circular(15),
+//     backgroundGradient: bdGradient,
+//     borderWidth: 2,
+//     borderColor: Colors.white,
+//     margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
+//   ).show(context);
+// }
 
 SnackBar MySnackBar(String title) {
-  return SnackBar(
+  return
+    SnackBar(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
