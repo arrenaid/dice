@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'constants.dart';
-import 'dice_model.dart';
+import '../constants.dart';
+import '../core/dice_model.dart';
 
 class DiceStackWidget extends StatelessWidget {
   final String imagePath;

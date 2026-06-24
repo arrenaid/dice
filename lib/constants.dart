@@ -1,4 +1,4 @@
-import 'package:dice/color_generate.dart';
+import 'package:dice/core/color_generate.dart';
 import 'package:flutter/material.dart';
 // const Color defPriClr = Color(0xFF8D6E63);//
 // const Color defSecClr = Color(0xFFCDF0EA); // EEE3CB // CDF0EA

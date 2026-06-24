@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:dice/roll_button.dart';
+import 'package:dice/widget/roll_button.dart';
 import 'package:dice/screens/bottom_sheet_widget.dart';
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:flutter/material.dart';

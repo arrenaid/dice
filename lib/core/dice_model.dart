@@ -30,47 +30,47 @@ abstract class Dice {
 class D6 extends Dice{
   @override
   List<Side> sides = [
-      Side("dice/d6_1.png" , 1),
-      Side("dice/d6_2.png" , 2),
-      Side("dice/d6_3.png" , 3),
-      Side("dice/d6_4.png" , 4),
-      Side("dice/d6_5.png" , 5),
-      Side("dice/d6_6.png" , 6),
+      Side("assets/dice/d6_1.png" , 1),
+      Side("assets/dice/d6_2.png" , 2),
+      Side("assets/dice/d6_3.png" , 3),
+      Side("assets/dice/d6_4.png" , 4),
+      Side("assets/dice/d6_5.png" , 5),
+      Side("assets/dice/d6_6.png" , 6),
   ];
 }
 class D4 extends Dice{
   @override
   List<Side> sides = List<Side>.generate(4,(counter) =>
-      Side("dice/d4.png" , counter + 1));
+      Side("assets/dice/d4.png" , counter + 1));
 
 }
 class D8 extends Dice{
 
   @override
   List<Side> sides = List<Side>.generate(8,(counter) =>
-  Side("dice/d8.png" , counter + 1));
+  Side("assets/dice/d8.png" , counter + 1));
 
 }
 class D10 extends Dice{
   @override
   List<Side> sides = List<Side>.generate(10,(counter) =>
-      Side("dice/d10.png" , counter + 1));
+      Side("assets/dice/d10.png" , counter + 1));
 }
 class D12 extends Dice{
   @override
   List<Side> sides = List<Side>.generate(12,(counter) =>
-      Side("dice/d12.png" , counter + 1));
+      Side("assets/dice/d12.png" , counter + 1));
 }
 class D20 extends Dice{
   @override
   List<Side> sides =List.generate(20, (counter) =>
-      Side("dice/d20.png", counter + 1));
+      Side("assets/dice/d20.png", counter + 1));
 }
 ///кость любым числом сторон
 class DiceInfinite extends Dice {
   ///Хранит число сторон для того что бы генерировать сторону только когда она будет вызвана
   late int sideCount;
-  final img =  "dice/dice_infinite.png";
+  final img =  "assets/dice/dice_infinite.png";
   late final int keyValue;
   @override
   List<Side> sides = [];
@@ -108,7 +108,7 @@ class AnonymousDice extends Dice{
 /// предыдущие кости в качестве числа стороны имели свой порядковый номер
 ///
 class DiceCustomSide extends Dice{
-  final img = "dice/dice_pentagon.png";
+  final img = "assets/dice/dice_pentagon.png";
   late final int keyValue;
   late int check = 0;
   @override

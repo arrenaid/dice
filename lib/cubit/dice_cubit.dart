@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
-import 'package:dice/dice_stack_widget.dart';
+import 'package:dice/widget/dice_stack_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import '../constants.dart';
-import '../dice_model.dart';
+import '../core/dice_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'dice_state.dart';

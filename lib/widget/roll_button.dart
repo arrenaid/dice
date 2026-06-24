@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
-import 'constants.dart';
+import '../constants.dart';
 
 class RollButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -44,12 +43,12 @@ class RollButton extends StatelessWidget {
         elevation: 15,
         enableFeedback: true,
         textColor: Colors.white,
+        onPressed: onPressed,
+        onLongPress: onLongPress,
         child: Center(
           widthFactor: widthFactor,
           child: child,
         ),
-        onPressed: onPressed,
-        onLongPress: onLongPress,
       ),
       // child: BounceElevatedButton(
       //   onPressed: onPressed,

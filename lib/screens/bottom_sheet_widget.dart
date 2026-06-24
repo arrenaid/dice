@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
 import '../constants.dart';
-import '../dice_model.dart';
+import '../core/dice_model.dart';
 // import 'package:flutter_bouncing_widgets/flutter_bouncing_widgets.dart';
 
 class DiceController extends StatefulWidget {
