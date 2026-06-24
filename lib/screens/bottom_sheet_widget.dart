@@ -323,7 +323,7 @@ class RowDiceCounting extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.only(left: 10),
-              height: 40,
+              height: MediaQuery.of(context).size.width / 8,
               width: MediaQuery.of(context).size.width / 2,
               decoration: BoxDecoration(
                 color: defBtnClr,
@@ -347,6 +347,7 @@ class RowDiceCounting extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: currentColor /*defSecClr*/,
                           elevation: 3,
+                          fixedSize: Size(MediaQuery.of(context).size.width / 7, MediaQuery.of(context).size.width / 7),
                           shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(30),
@@ -360,7 +361,7 @@ class RowDiceCounting extends StatelessWidget {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: currentColor,
-                            /*defSecClr,*/
+                            fixedSize: Size(MediaQuery.of(context).size.width /7, MediaQuery.of(context).size.width /7),
                             elevation: 3,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
