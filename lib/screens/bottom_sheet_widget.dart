@@ -413,11 +413,10 @@ class SuccessThresholdSlider extends StatelessWidget {
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-                //trackShape: RectangularSliderTrackShape(),
                 activeTrackColor: defSecClr,
                 inactiveTrackColor: defPriClr,
                 thumbColor: defSecClr,
-                activeTickMarkColor: defBtnClr,
+                overlayColor: defPriClr.withOpacity(0.5),
                 thumbShape: DiamondSliderThumbShape()),
             child: Slider(
               // activeColor: defSecClr,

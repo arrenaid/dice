@@ -464,8 +464,8 @@ class DiceCubit extends Cubit<DiceState> {
     } catch (e) {
       print("--error-load-count--$e");
       if (state.listDice.isEmpty) {
-        addDice(D6());
-        addDice(D6());
+        addDice(state.listAllDice.elementAt(2));
+        addDice(state.listAllDice.elementAt(1));
       }
     }
   }
