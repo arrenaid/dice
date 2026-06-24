@@ -9,13 +9,15 @@ class DiceState extends Equatable {
   final int rollResult ;
   final int rollMax;
   final StateStatus status;
+  final double successThreshold;
 
   const DiceState({required this.currentImg,
         required this.listDice,
         required this.rollResult,
         required this.rollMax,
         required this.status,
-    required this.listAllDice
+    required this.listAllDice,
+    required this.successThreshold,
   });
 
   @override
@@ -26,14 +28,16 @@ class DiceState extends Equatable {
     int? rollResult,
     int? rollMax,
     StateStatus? status,
-    List<Dice>? listAllDice
+    List<Dice>? listAllDice,
+    double? successThreshold
   }){
     return DiceState(currentImg: currentImg ?? this.currentImg,
         listDice: listDice ?? this.listDice,
         rollResult: rollResult ?? this.rollResult,
         rollMax: rollMax ?? this.rollMax,
         status: status ?? this.status,
-        listAllDice: listAllDice ?? this.listAllDice
+        listAllDice: listAllDice ?? this.listAllDice,
+        successThreshold: successThreshold ?? this.successThreshold
     );
   }
 
