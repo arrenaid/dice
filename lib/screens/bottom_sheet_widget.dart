@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:dice/screens/dice_custom_side_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_bouncing_widgets/Widgets/bounce_elevated_button.dart';
 import '../constants.dart';
 import '../core/dice_model.dart';
-// import 'package:flutter_bouncing_widgets/flutter_bouncing_widgets.dart';
 
 class DiceController extends StatefulWidget {
   @override
@@ -124,10 +121,6 @@ class _DiceControllerState extends State<DiceController> {
                                   onPressed: () => context
                                       .read<DiceCubit>()
                                       .addDice(state.listAllDice[index]),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: defPriClr,
-                                  ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: currentColor /*defSecClr*/,
                                     elevation: 3,
@@ -135,6 +128,10 @@ class _DiceControllerState extends State<DiceController> {
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(30),
                                             bottomLeft: Radius.circular(30))),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: defPriClr,
                                   ),
                                 ),
                                 ElevatedButton(
@@ -296,27 +293,6 @@ class _DiceControllerState extends State<DiceController> {
           );
   }
 }
-// snackBar2(BuildContext context){
-//   Flushbar(
-//     flushbarPosition: FlushbarPosition.TOP,
-//     flushbarStyle: FlushbarStyle.FLOATING,
-//     titleText: const Text(
-//       'Ошибка',
-//       style: tsCity,
-//     ),
-//     messageText: Text(
-//       state.message,
-//       style: tsMini,
-//     ),
-//     duration: const Duration(seconds: 5),
-//     isDismissible: false,
-//     borderRadius: BorderRadius.circular(15),
-//     backgroundGradient: bdGradient,
-//     borderWidth: 2,
-//     borderColor: Colors.white,
-//     margin: const EdgeInsets.only(top: 100, left: 20, right: 20),
-//   ).show(context);
-// }
 
 SnackBar MySnackBar(String title) {
   return
