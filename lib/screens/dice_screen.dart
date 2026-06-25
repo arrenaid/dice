@@ -71,8 +71,9 @@ class _DiceScreenState extends State<DiceScreen>
                               child: GridView.builder(
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount:
-                                        context.read<DiceCubit>().axisCount(),
+                                    crossAxisCount: context
+                                        .read<DiceCubit>()
+                                        .axisCount(),
                                   ),
                                   itemCount: state.currentImg.length,
                                   physics: state.listDice.length < 7
@@ -80,8 +81,9 @@ class _DiceScreenState extends State<DiceScreen>
                                       : const BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return RotationTransition(
-                                      turns: _controller.drive(Tween<double>(
-                                          begin: 1.0, end: pi / 6)),
+                                      turns: _controller.drive(
+                                          Tween<double>(
+                                              begin: 1.0, end: pi / 6)),
                                       child: FadeTransition(
                                         opacity: _controller.drive(
                                             Tween<double>(
