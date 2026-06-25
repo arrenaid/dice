@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 
 class DiceScreen extends StatefulWidget {
-  const DiceScreen({Key? key}) : super(key: key);
+  const DiceScreen({super.key});
 
   @override
   State<DiceScreen> createState() => _DiceScreenState();
@@ -38,35 +38,14 @@ class _DiceScreenState extends State<DiceScreen>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DiceCubit, DiceState>(builder: (context, state) {
-      // if(state.status == StateStatus.error){
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(MySnackBar("Error" + state.currentImg.toString()));
-      // }
       return Scaffold(
-        //backgroundColor: defPriClr,
         body: Container(
           decoration: const BoxDecoration(
-            // gradient: LinearGradient(
-            // begin: Alignment.topCenter,
-            // end: Alignment.bottomCenter,
-            // tileMode:  TileMode.clamp,
-            //    // stops: [0.5, 0.8],
-            //    // stops: [0.7, 0.5],
-            // //colors: [ Color(0xFF088052), /*Color(0xFF4e6b68),*/ defBtnClr]
-            //   //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
-            //     colors: [Color(0xFF43cea2 ),Color(0xFF185a9d)],//Endless River
-            // )
             gradient: RadialGradient(
               colors: [defPriClr, Colors.black],
-              //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
               radius: 1.7,
               focal: Alignment(-0.1, 0.8),
               tileMode: TileMode.clamp,
-              // colors: [Colors.green, Colors.blue, Colors.orange, Colors.pink],
-              // stops: [0.2, 0.5, 0.7, 1],
-              // center: Alignment(-0.1, 0.6),
-              // focal: Alignment(0.1, 0.3),
-              // focalRadius: 2,
             ),
           ),
           child: SafeArea(
@@ -134,7 +113,8 @@ class _DiceScreenState extends State<DiceScreen>
                           Column(
                             children: [
                               if (state.rollResult >
-                                  (state.rollMax * state.successThreshold).ceil()) ...[
+                                  (state.rollMax * state.successThreshold)
+                                      .ceil()) ...[
                                 ScaleTransition(
                                   scale: _controller.drive(
                                       Tween<double>(begin: 1.0, end: 0.8)),
@@ -150,8 +130,8 @@ class _DiceScreenState extends State<DiceScreen>
                                   ),
                                 ),
                                 ScaleTransition(
-                                  scale: _controller
-                                      .drive(Tween<double>(begin: 1.0, end: 0.8)),
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
                                   child: FadeTransition(
                                     opacity: _controller.drive(
                                         Tween<double>(begin: 1.0, end: 0.0)),
@@ -159,9 +139,10 @@ class _DiceScreenState extends State<DiceScreen>
                                       child: state.currentImg.isEmpty
                                           ? null
                                           : Text(
-                                        "${state.successThreshold}",
-                                        style: defTs.copyWith(fontSize: 10),
-                                      ),
+                                              "${state.successThreshold}",
+                                              style:
+                                                  defTs.copyWith(fontSize: 10),
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -179,8 +160,7 @@ class _DiceScreenState extends State<DiceScreen>
                                     child: state.currentImg.isEmpty
                                         ? null
                                         : Text(
-                                            "${(state.rollMax
-                                                * state.successThreshold).ceil()}+",
+                                            "${(state.rollMax * state.successThreshold).ceil()}+",
                                             style: defTs.copyWith(fontSize: 10),
                                           ),
                                   ),
@@ -188,10 +168,11 @@ class _DiceScreenState extends State<DiceScreen>
                               ),
 
                               if (!(state.rollResult >
-                                  (state.rollMax * state.successThreshold).ceil())) ...[
+                                  (state.rollMax * state.successThreshold)
+                                      .ceil())) ...[
                                 ScaleTransition(
-                                  scale: _controller
-                                      .drive(Tween<double>(begin: 1.0, end: 0.8)),
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
                                   child: FadeTransition(
                                     opacity: _controller.drive(
                                         Tween<double>(begin: 1.0, end: 0.0)),
@@ -199,9 +180,10 @@ class _DiceScreenState extends State<DiceScreen>
                                       child: state.currentImg.isEmpty
                                           ? null
                                           : Text(
-                                        "${state.successThreshold}",
-                                        style: defTs.copyWith(fontSize: 10),
-                                      ),
+                                              "${state.successThreshold}",
+                                              style:
+                                                  defTs.copyWith(fontSize: 10),
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -231,10 +213,6 @@ class _DiceScreenState extends State<DiceScreen>
                                     opacity: _controller.drive(
                                         Tween<double>(begin: 1.0, end: 0.0)),
                                     child: ScaleTransition(
-                                      //,
-                                      //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
-                                      //sizeFactor: ,
-
                                       scale: _controller.drive(Tween<double>(
                                           begin: 1.0, end: 1.2)), //end: 1.2
                                       child: Text(
@@ -278,13 +256,8 @@ class _DiceScreenState extends State<DiceScreen>
                 children: [
                   Center(
                     child: ScaleTransition(
-                      //,
-                      //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
-                      //sizeFactor: ,
-
                       scale: _controller
                           .drive(Tween<double>(begin: 1.0, end: 0.9)),
-                      //end: 1.2
                       child: RollButton(
                         onPressed: () {
                           _controller.forward().whenComplete(() {
@@ -301,7 +274,10 @@ class _DiceScreenState extends State<DiceScreen>
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(50))),
                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                            builder: (_) => DiceController(),
+                            builder: (context) => LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  DiceController(width: constraints.maxWidth),
+                            ),
                           );
                         },
                         child: Text(
@@ -311,36 +287,6 @@ class _DiceScreenState extends State<DiceScreen>
                         ),
                       ),
                     ),
-                    // MaterialButton(
-                    //   padding: const EdgeInsets.symmetric(
-                    //       vertical: 5.0, horizontal: 20),
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(30.0),),
-                    //   color: defBtnClr,
-                    //   splashColor: defPriClr,
-                    //   elevation: 15,
-                    //   enableFeedback: true,
-                    //   textColor: Colors.white,
-                    //   child: Text("ROLL",
-                    //     style: defTs.copyWith(fontSize: 40,shadows: []),
-                    //   ),
-                    //   onPressed: () {
-                    //     _controller.forward().whenComplete(() {
-                    //       context.read<DiceCubit>().roll();
-                    //       _controller.reverse();});
-                    //   },
-                    //   onLongPress: () {
-                    //     _controller.forward();
-                    //     showModalBottomSheet(
-                    //       context: context,
-                    //       elevation: 15,
-                    //       shape: const RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
-                    //       clipBehavior: Clip.antiAliasWithSaveLayer,
-                    //       builder: (_) => DiceController(),
-                    //     );
-                    //   },
-                    // ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 10),
                 ],

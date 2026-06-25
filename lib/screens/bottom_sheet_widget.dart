@@ -9,34 +9,28 @@ import '../constants.dart';
 import '../core/dice_model.dart';
 
 class DiceController extends StatefulWidget {
+  final double width;
+
+  const DiceController({super.key, required this.width});
+
   @override
   State<DiceController> createState() => _DiceControllerState();
 }
 
 class _DiceControllerState extends State<DiceController> {
-  // List<Dice> listAllDice = [ D4(), D6(), D8(), D10(), D12(), D20(), AnonymousDice() ];
-
   final _formKey = GlobalKey<FormState>();
   bool isVisible = false;
-
-  // late final List<Dice> twinAll ;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DiceCubit, DiceState>(builder: (context, state) {
-      // twinAll = state.listAllDice;
-      // twinAll.add(AnonymousDice());
-      // if(state.listAllDice.last != AnonymousDice){
-      //   state.listAllDice.add(AnonymousDice());
-      // }
       return Scaffold(
           backgroundColor: defPriClr,
           body: ListView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: state.listAllDice.length, //listAllDice.length,
+            itemCount: state.listAllDice.length,
             itemBuilder: (context, index) {
-              Color currentColor =
-                  state.listAllDice[index].color; //colorGenerator.generate();
+              Color currentColor = state.listAllDice[index].color;
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
@@ -49,7 +43,8 @@ class _DiceControllerState extends State<DiceController> {
                                 .changeSuccessThreshold(value))
                         : Column(
                             children: [
-                              addCustomDiceRow(context),
+                              addCustomDiceRow(
+                                  context: context, width: widget.width),
                               SizedBox(
                                 height: 10,
                               ),
@@ -59,7 +54,9 @@ class _DiceControllerState extends State<DiceController> {
                     : RowDiceCounting(
                         currentColor: currentColor,
                         dice: state.listAllDice[index],
-                        index: index),
+                        index: index,
+                        width: widget.width,
+                      ),
               );
             },
           ));
@@ -76,9 +73,17 @@ class _DiceControllerState extends State<DiceController> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          builder: (_) => CustomSideDiceSheet(),
+          builder: (_) => LayoutBuilder(
+            builder: (context, constraints) =>
+                CustomSideDiceSheet(width: constraints.maxWidth),
+          ),
         );
       },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: defSecClr,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
       child: SizedBox(
         width: double.infinity,
         child: Text(
@@ -87,19 +92,11 @@ class _DiceControllerState extends State<DiceController> {
           textAlign: TextAlign.center,
         ),
       ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: defSecClr,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-      // borderRadius: BorderRadius.circular(30),
-      // color: defSecClr,
     );
   }
 
   Widget addCustomDiceRow(
-    BuildContext context,
-  ) {
+      {required BuildContext context, required double width}) {
     int lengthValue = 1;
     return isVisible
         ? Row(
@@ -108,8 +105,9 @@ class _DiceControllerState extends State<DiceController> {
               Form(
                 key: _formKey,
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: width / 2,
                   child: TextFormField(
+                    cursorColor: defSecClr,
                     decoration: const InputDecoration(
                       hintText: "Dice number",
                       hintStyle: defTs,
@@ -119,6 +117,12 @@ class _DiceControllerState extends State<DiceController> {
                       errorStyle: defTs,
                       prefixStyle: defTs,
                       counterStyle: defTs,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: defSecClr, width: 2.5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: defSecClr, width: 2.5),
+                      ),
                     ),
                     style: defTs,
                     keyboardType: TextInputType.number,
@@ -207,11 +211,13 @@ class RowDiceCounting extends StatelessWidget {
       {super.key,
       required this.currentColor,
       required this.dice,
-      required this.index});
+      required this.index,
+      required this.width});
 
   final Color currentColor;
   final Dice dice;
   final int index;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +234,7 @@ class RowDiceCounting extends StatelessWidget {
             Container(
               height: 30,
               child: OverflowBox(
-                maxWidth: MediaQuery.of(context).size.width,
+                maxWidth: width,
                 child: ListView.separated(
                   padding: EdgeInsets.only(left: 40, top: 5),
                   physics: BouncingScrollPhysics(),
@@ -238,8 +244,8 @@ class RowDiceCounting extends StatelessWidget {
                   itemBuilder: (context, index) => Container(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
-                        color: defBtnClr,
-                        borderRadius: BorderRadius.circular(15),
+                      color: defBtnClr,
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Center(
                       child: Text(
@@ -262,8 +268,8 @@ class RowDiceCounting extends StatelessWidget {
             dice.runtimeType == DiceInfinite ||
                     dice.runtimeType == DiceCustomSide
                 ? SizedBox(
-                    height: MediaQuery.of(context).size.width / 6,
-                    width: MediaQuery.of(context).size.width / 6,
+                    height: width / 6,
+                    width: width / 6,
                     child: Stack(
                       children: [
                         Image.asset(
@@ -280,10 +286,15 @@ class RowDiceCounting extends StatelessWidget {
                                 .removeDiceInfinite(index),
                             icon: Icon(
                               CupertinoIcons.delete_solid,
-                              color: dice.runtimeType == DiceCustomSide ? defBtnClr :defSecClr,
+                              color: dice.runtimeType == DiceCustomSide
+                                  ? defBtnClr
+                                  : defSecClr,
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: dice.runtimeType == DiceCustomSide? currentColor : defBtnClr,
+                              backgroundColor:
+                                  dice.runtimeType == DiceCustomSide
+                                      ? currentColor
+                                      : defBtnClr,
                               elevation: 3,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
@@ -296,13 +307,13 @@ class RowDiceCounting extends StatelessWidget {
                     ),
                   )
                 : Container(
-                    height: MediaQuery.of(context).size.width / 6,
+                    height: width / 6,
                     child: Image.asset(
                       dice.sides.first.image,
                       color: currentColor,
                     )),
             Container(
-              width: MediaQuery.of(context).size.width / 5,
+              width: width / 5,
               child: Align(
                 alignment: FractionalOffset(0, 0.5),
                 child: Text(
@@ -323,8 +334,8 @@ class RowDiceCounting extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.only(left: 10),
-              height: MediaQuery.of(context).size.width / 8,
-              width: MediaQuery.of(context).size.width / 2,
+              height: width / 8,
+              width: width / 2,
               decoration: BoxDecoration(
                 color: defBtnClr,
                 borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -347,7 +358,7 @@ class RowDiceCounting extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: currentColor /*defSecClr*/,
                           elevation: 3,
-                          fixedSize: Size(MediaQuery.of(context).size.width / 7, MediaQuery.of(context).size.width / 7),
+                          fixedSize: Size(width / 7, width / 7),
                           shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(30),
@@ -361,7 +372,7 @@ class RowDiceCounting extends StatelessWidget {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: currentColor,
-                            fixedSize: Size(MediaQuery.of(context).size.width /7, MediaQuery.of(context).size.width /7),
+                            fixedSize: Size(width / 7, width / 7),
                             elevation: 3,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
