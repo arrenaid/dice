@@ -1,10 +1,17 @@
 import 'package:dice/cubit/dice_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'screens/dice_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

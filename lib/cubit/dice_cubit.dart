@@ -19,6 +19,7 @@ class DiceCubit extends Cubit<DiceState> {
 
   DiceCubit()
       : super(DiceState(currentImg: [], listDice: [], listAllDice: [
+          AnonymousDice(),
           D4(),
           D6(),
           D8(),
@@ -26,16 +27,19 @@ class DiceCubit extends Cubit<DiceState> {
           D12(),
           D20(),
           AnonymousDice()
-        ], rollResult: 0, rollMax: 12, status: StateStatus.initial)) {
+        ], rollResult: 0, rollMax: 12, status: StateStatus.initial,
+      successThreshold: 0.5)) {
     _loadDiceInfinite();
     _loadDiceCustomSide();
     _loadDiceCount();
+    _loadSuccessThreshold();
   }
 
   dispose() {
     _saveDiceInfinite(state.listAllDice);
     _saveDiceCustomSide(state.listAllDice);
     _saveListDiceCount();//state.listDice
+    _saveSuccessThreshold(state.successThreshold);
   }
 
   int _countRollMax(List<Dice> twin) {
@@ -165,6 +169,12 @@ class DiceCubit extends Cubit<DiceState> {
         }
       }
     }
+  }
+
+  changeSuccessThreshold(double threshold) {
+    emit(state.copyWith(status: StateStatus.loading));
+    _saveSuccessThreshold(threshold);
+    emit(state.copyWith(successThreshold: threshold, status: StateStatus.loaded));
   }
 
   int countType(Dice type) {
@@ -322,6 +332,15 @@ class DiceCubit extends Cubit<DiceState> {
     // }
   }
 
+  Future<void> _saveSuccessThreshold(double threshold) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setDouble(sharedSuccessThreshold, threshold);
+    } catch (e) {
+      print("--error-save-success-threshold-$e");
+    }
+  }
+
   Future<void> _loadDiceInfinite() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -445,10 +464,17 @@ class DiceCubit extends Cubit<DiceState> {
     } catch (e) {
       print("--error-load-count--$e");
       if (state.listDice.isEmpty) {
-        addDice(D6());
-        addDice(D6());
+        addDice(state.listAllDice.elementAt(2));
+        addDice(state.listAllDice.elementAt(1));
       }
     }
+  }
+
+  Future<void> _loadSuccessThreshold() async {
+    emit(state.copyWith(status: StateStatus.loading));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    double? threshold = prefs.getDouble(sharedSuccessThreshold);
+    emit(state.copyWith(status: StateStatus.loaded, successThreshold: threshold ?? 0.5));
   }
 
   int infiniteLength(Dice dice) {

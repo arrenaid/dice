@@ -7,15 +7,19 @@ import '../cubit/dice_cubit.dart';
 import 'bottom_sheet_widget.dart';
 
 class CustomSideDiceSheet extends StatefulWidget {
+  final double width;
+
+  const CustomSideDiceSheet({super.key, required this.width});
+
   @override
   State<CustomSideDiceSheet> createState() => _CustomSideDiceSheetState();
 }
 
 class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
 
+  final List<int> _sides= [];
   final _formKey = GlobalKey<FormState>();
   bool _isVisible = false;
-  final List<int> _sides= [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Dc' +  _sides.length.toString(),
+                Text('Dc${_sides.length}',
                   style: defTs
                 ),
                 ElevatedButton(
@@ -48,15 +52,15 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(MySnackBar("Few sides"));
                     }
-                  },
-                  child: Text('Save Dice',
-                    style: defTs.copyWith(color: defBtnClr, shadows: []),), //Icon(CupertinoIcons.paperclip, color: defBtnClr,),
+                  }, //Icon(CupertinoIcons.paperclip, color: defBtnClr,),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: defSecClr,
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
+                  child: Text('Save Dice',
+                    style: defTs.copyWith(color: defBtnClr, shadows: []),),
                   // color: defSecClr,
                   // borderRadius: BorderRadius.circular(30),
                 ),
@@ -78,7 +82,7 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                         child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('side ' + ((index + 1).toString()), style: defTs,),
+                            Text('side ${index + 1}', style: defTs,),
                             Text(_sides[index].toString(), style: defTs,),
                             /*Bounce*/ElevatedButton(
                               onPressed: () {
@@ -86,19 +90,17 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                                   _sides.removeAt(index);
                                 });
                               },
-                              child: SizedBox(
-                                width: 50,
-                                child: Icon(CupertinoIcons.delete_solid,
-                                  color: defBtnClr,),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: defSecClr,
                                 elevation: 3,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
                               ),
-                              // color: defSecClr,
-                              // borderRadius: BorderRadius.circular(30),
+                              child: SizedBox(
+                                width: 50,
+                                child: Icon(CupertinoIcons.delete_solid,
+                                  color: defBtnClr,),
+                              ),
                             ),
                           ],
                         ),
@@ -113,7 +115,6 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
     );
   }
 
-
   Widget addSide(BuildContext context, ){
     int formValue = 1;
     return _isVisible
@@ -122,9 +123,10 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
       children: [
         Form(
           key: _formKey,
-          child: Container(
-            width: MediaQuery.of(context).size.width/2,
+          child: SizedBox(
+            width: widget.width/2,
             child: TextFormField(
+              cursorColor: defSecClr,
               decoration: const InputDecoration(hintText: "Number side",
                 hintStyle: defTs ,
                 suffixStyle: defTs,
@@ -133,6 +135,12 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                 errorStyle: defTs,
                 prefixStyle: defTs,
                 counterStyle: defTs,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: defSecClr, width: 2.5),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: defSecClr, width: 2.5),
+                ),
               ),
               style: defTs,
               keyboardType: TextInputType.number,
@@ -178,15 +186,15 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
                     textAlign: TextAlign.center,)));
             }
           },
-          child: const Icon(
-            Icons.add,
-            color: defPriClr,
-          ),
           style: ElevatedButton.styleFrom(
             backgroundColor: defSecClr,
             elevation: 3,
             shape:RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30)),
+          ),
+          child: const Icon(
+            Icons.add,
+            color: defPriClr,
           ),
         ),
       ],
@@ -199,15 +207,15 @@ class _CustomSideDiceSheetState extends State<CustomSideDiceSheet> {
             _isVisible = true;
           });
         },
-        child: const Icon(
-          Icons.add,
-          color: defPriClr,
-        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: defSecClr,
           elevation: 3,
           shape:RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30)),
+        ),
+        child: const Icon(
+          Icons.add,
+          color: defPriClr,
         ),
       ),
     );

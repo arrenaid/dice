@@ -2,27 +2,28 @@ import 'dart:math';
 import 'package:dice/widget/roll_button.dart';
 import 'package:dice/screens/bottom_sheet_widget.dart';
 import 'package:dice/cubit/dice_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 
-class DiceScreen extends StatefulWidget  {
-  const DiceScreen({Key? key}) : super(key: key);
+class DiceScreen extends StatefulWidget {
+  const DiceScreen({super.key});
 
   @override
   State<DiceScreen> createState() => _DiceScreenState();
 }
 
-class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateMixin{
+class _DiceScreenState extends State<DiceScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-      animationBehavior: AnimationBehavior.preserve
-    );
+        vsync: this,
+        duration: const Duration(milliseconds: 250),
+        animationBehavior: AnimationBehavior.preserve);
 
     super.initState();
   }
@@ -36,61 +37,43 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DiceCubit,DiceState>(
-      builder: (context, state) {
-        // if(state.status == StateStatus.error){
-        //   ScaffoldMessenger.of(context)
-        //       .showSnackBar(MySnackBar("Error" + state.currentImg.toString()));
-        // }
-        return Scaffold(
-          //backgroundColor: defPriClr,
-          body: Container(
-        decoration: const BoxDecoration(
-        // gradient: LinearGradient(
-        // begin: Alignment.topCenter,
-        // end: Alignment.bottomCenter,
-        // tileMode:  TileMode.clamp,
-        //    // stops: [0.5, 0.8],
-        //    // stops: [0.7, 0.5],
-        // //colors: [ Color(0xFF088052), /*Color(0xFF4e6b68),*/ defBtnClr]
-        //   //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
-        //     colors: [Color(0xFF43cea2 ),Color(0xFF185a9d)],//Endless River
-        // )
-          gradient: RadialGradient(
-             colors: [defPriClr, Colors.black],
-            //colors: [Color(0xFF56ab2f ),Color(0xFFa8e063)],//Lush
-            radius: 1.7,
-            focal: Alignment(-0.1, 0.8),
-            tileMode: TileMode.clamp,
-            // colors: [Colors.green, Colors.blue, Colors.orange, Colors.pink],
-            // stops: [0.2, 0.5, 0.7, 1],
-            // center: Alignment(-0.1, 0.6),
-            // focal: Alignment(0.1, 0.3),
-            // focalRadius: 2,
+    return BlocBuilder<DiceCubit, DiceState>(builder: (context, state) {
+      return Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: RadialGradient(
+              colors: [defPriClr, Colors.black],
+              radius: 1.7,
+              focal: Alignment(-0.1, 0.8),
+              tileMode: TileMode.clamp,
+            ),
           ),
-        ),
-            child: SafeArea(
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height / 2,
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
-                          child: state.currentImg.isEmpty ? null
-                              : ScaleTransition(
-                                scale: _controller.drive(Tween<double>(begin: 1.0,end: 2.0)),
-                                child: RotationTransition(
-                                  turns: _controller.drive(Tween<double>(begin: 1.0,end: pi/3)),
-                                  child: GridView.builder(
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: context.read<DiceCubit>().axisCount(),
+          child: SafeArea(
+              child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 5),
+                    child: state.currentImg.isEmpty
+                        ? null
+                        : ScaleTransition(
+                            scale: _controller
+                                .drive(Tween<double>(begin: 1.0, end: 2.0)),
+                            child: RotationTransition(
+                              turns: _controller.drive(
+                                  Tween<double>(begin: 1.0, end: pi / 3)),
+                              child: GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: context
+                                        .read<DiceCubit>()
+                                        .axisCount(),
                                   ),
                                   itemCount: state.currentImg.length,
                                   physics: state.listDice.length < 7
@@ -98,136 +81,222 @@ class _DiceScreenState extends State<DiceScreen> with SingleTickerProviderStateM
                                       : const BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
                                     return RotationTransition(
-                                      turns: _controller.drive(Tween<double>(begin: 1.0,end: pi/6)),
+                                      turns: _controller.drive(
+                                          Tween<double>(
+                                              begin: 1.0, end: pi / 6)),
                                       child: FadeTransition(
-                                        opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
+                                        opacity: _controller.drive(
+                                            Tween<double>(
+                                                begin: 1.0, end: 0.0)),
                                         child: ScaleTransition(
-                                          scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.1)),
+                                          scale: _controller.drive(
+                                              Tween<double>(
+                                                  begin: 1.0, end: 0.1)),
                                           child: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: state.currentImg[index] //Image(image: state.currentImg[index].image, color: defSecClr),
-                                          ),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: state.currentImg[
+                                                  index] //Image(image: state.currentImg[index].image, color: defSecClr),
+                                              ),
                                         ),
                                       ),
                                     );
                                   }),
-                                ),
-                              ),
-                        ),
-                        Center(
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: state.currentImg.isEmpty ? null
-                                      : FadeTransition(
-                                        opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                        child: ScaleTransition(
-                                          //,
-                                          //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
-                                          //sizeFactor: ,
-
-                                          scale: _controller.drive(Tween<double>(begin: 1.0,end: 1.2)),//end: 1.2
-                                          child: Text("${state.rollResult}",
-                                    style: defTs.copyWith(fontSize: 100),
+                            ),
+                          ),
+                  ),
+                  Center(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              if (state.rollResult >
+                                  (state.rollMax * state.successThreshold)
+                                      .ceil()) ...[
+                                ScaleTransition(
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
+                                  child: FadeTransition(
+                                    opacity: _controller.drive(
+                                        Tween<double>(begin: 1.0, end: 0.0)),
+                                    child: Container(
+                                      child: state.currentImg.isEmpty
+                                          ? null
+                                          : Icon(CupertinoIcons.arrow_up,
+                                              color: defSecClr),
+                                    ),
                                   ),
-                                        ),
-                                      ),
                                 ),
                                 ScaleTransition(
-                                  scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.8)),
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
                                   child: FadeTransition(
-                                    opacity: _controller.drive(Tween<double>(begin: 1.0,end: 0.0)),
-                                    child:Container(
-                                child: state.currentImg.isEmpty ? null
-                                    : Text("${state.rollMax}",
-                                  style: defTs.copyWith(fontSize: 10),
-                                ),),),
+                                    opacity: _controller.drive(
+                                        Tween<double>(begin: 1.0, end: 0.0)),
+                                    child: Container(
+                                      child: state.currentImg.isEmpty
+                                          ? null
+                                          : Text(
+                                              "${state.successThreshold}",
+                                              style:
+                                                  defTs.copyWith(fontSize: 10),
+                                            ),
+                                    ),
+                                  ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.height / 5,),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Center(
-                          child:
-                          ScaleTransition(
-                            //,
-                            //position: _controller.drive(Tween<Offset>(begin: Offset(1.0,0.0),end:Offset(0.0, 0.0))),
-                            //sizeFactor: ,
 
-                            scale: _controller.drive(Tween<double>(begin: 1.0,end: 0.9)),//end: 1.2
-                            child: RollButton(
-                              onPressed: () {_controller.forward().whenComplete(() {
-                                        context.read<DiceCubit>().roll();
-                                        _controller.reverse();});
-                                        },
-                              onLongPress: () {
-                                _controller.forward();
-                                showModalBottomSheet(
-                                  context: context,
-                                  elevation: 15,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  builder: (_) => DiceController(),
-                                );
-                              },
-                              child: Text("ROLL",
-                                    style: defTs.copyWith(color: defBtnClr,fontSize: 40,shadows: []),
+                              ///0.5 от максимального броска
+                              ///для понимания выигрышный бросок или проигрышный необходим коифецент выигрыша
+                              ScaleTransition(
+                                scale: _controller
+                                    .drive(Tween<double>(begin: 1.0, end: 0.8)),
+                                child: FadeTransition(
+                                  opacity: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.0)),
+                                  child: Container(
+                                    child: state.currentImg.isEmpty
+                                        ? null
+                                        : Text(
+                                            "${(state.rollMax * state.successThreshold).ceil()}+",
+                                            style: defTs.copyWith(fontSize: 10),
+                                          ),
                                   ),
+                                ),
+                              ),
+
+                              if (!(state.rollResult >
+                                  (state.rollMax * state.successThreshold)
+                                      .ceil())) ...[
+                                ScaleTransition(
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
+                                  child: FadeTransition(
+                                    opacity: _controller.drive(
+                                        Tween<double>(begin: 1.0, end: 0.0)),
+                                    child: Container(
+                                      child: state.currentImg.isEmpty
+                                          ? null
+                                          : Text(
+                                              "${state.successThreshold}",
+                                              style:
+                                                  defTs.copyWith(fontSize: 10),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                                ScaleTransition(
+                                  scale: _controller.drive(
+                                      Tween<double>(begin: 1.0, end: 0.8)),
+                                  child: FadeTransition(
+                                    opacity: _controller.drive(
+                                        Tween<double>(begin: 1.0, end: 0.0)),
+                                    child: Container(
+                                      child: state.currentImg.isEmpty
+                                          ? null
+                                          : Icon(CupertinoIcons.arrow_down,
+                                              color: defSecClr),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+
+                          ///результат броска
+                          Container(
+                            child: state.currentImg.isEmpty
+                                ? null
+                                : FadeTransition(
+                                    opacity: _controller.drive(
+                                        Tween<double>(begin: 1.0, end: 0.0)),
+                                    child: ScaleTransition(
+                                      scale: _controller.drive(Tween<double>(
+                                          begin: 1.0, end: 1.2)), //end: 1.2
+                                      child: Text(
+                                        "${state.rollResult}",
+                                        style: defTs.copyWith(fontSize: 100),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+
+                          ///максимальный возможный бросок
+                          ScaleTransition(
+                            scale: _controller
+                                .drive(Tween<double>(begin: 1.0, end: 0.8)),
+                            child: FadeTransition(
+                              opacity: _controller
+                                  .drive(Tween<double>(begin: 1.0, end: 0.0)),
+                              child: Container(
+                                child: state.currentImg.isEmpty
+                                    ? null
+                                    : Text(
+                                        "${state.rollMax}",
+                                        style: defTs.copyWith(fontSize: 10),
+                                      ),
+                              ),
                             ),
                           ),
-                          // MaterialButton(
-                          //   padding: const EdgeInsets.symmetric(
-                          //       vertical: 5.0, horizontal: 20),
-                          //   shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(30.0),),
-                          //   color: defBtnClr,
-                          //   splashColor: defPriClr,
-                          //   elevation: 15,
-                          //   enableFeedback: true,
-                          //   textColor: Colors.white,
-                          //   child: Text("ROLL",
-                          //     style: defTs.copyWith(fontSize: 40,shadows: []),
-                          //   ),
-                          //   onPressed: () {
-                          //     _controller.forward().whenComplete(() {
-                          //       context.read<DiceCubit>().roll();
-                          //       _controller.reverse();});
-                          //   },
-                          //   onLongPress: () {
-                          //     _controller.forward();
-                          //     showModalBottomSheet(
-                          //       context: context,
-                          //       elevation: 15,
-                          //       shape: const RoundedRectangleBorder(
-                          //           borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
-                          //       clipBehavior: Clip.antiAliasWithSaveLayer,
-                          //       builder: (_) => DiceController(),
-                          //     );
-                          //   },
-                          // ),
-                        ),
-                        SizedBox(height: MediaQuery.of(context).size.height / 10),
-                      ],
+                        ],
+                      ),
                     ),
-                  ],
-                )
-            ),
-          ),
-        );
-      }
-    );
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Center(
+                    child: ScaleTransition(
+                      scale: _controller
+                          .drive(Tween<double>(begin: 1.0, end: 0.9)),
+                      child: RollButton(
+                        onPressed: () {
+                          _controller.forward().whenComplete(() {
+                            context.read<DiceCubit>().roll();
+                            _controller.reverse();
+                          });
+                        },
+                        onLongPress: () {
+                          _controller.forward();
+                          showModalBottomSheet(
+                            context: context,
+                            elevation: 15,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(50))),
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            builder: (context) => LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  DiceController(width: constraints.maxWidth),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "ROLL",
+                          style: defTs.copyWith(
+                              color: defBtnClr, fontSize: 40, shadows: []),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height / 10),
+                ],
+              ),
+            ],
+          )),
+        ),
+      );
+    });
   }
 }
