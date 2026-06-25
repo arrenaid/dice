@@ -82,7 +82,9 @@ class HistoryRow extends StatelessWidget {
                     Text(
                       "${past.result}",
                       textAlign: TextAlign.center,
-                      style: defTs.copyWith(
+                      style:  TextStyle(
+                        fontFamily: "MarkoOne",
+                        fontWeight: FontWeight.bold,
                         fontSize: 35,
                         color: isWin ? defBtnClr : defSecClr,
                       ),
@@ -90,7 +92,9 @@ class HistoryRow extends StatelessWidget {
                     Text(
                       "st:${past.threshold} max:${past.max}",
                       textAlign: TextAlign.center,
-                      style: defTs.copyWith(
+                      style:  TextStyle(
+                        fontFamily: "MarkoOne",
+                        fontWeight: FontWeight.bold,
                         fontSize: 15,
                         color: isWin ? defBtnClr : defSecClr,
                       ),
@@ -105,7 +109,7 @@ class HistoryRow extends StatelessWidget {
                   itemCount: past.side.length,
                   padding: EdgeInsets.symmetric(vertical: 10),
                   itemBuilder: (context, index) {
-                    past.side[index].setFontSizeFromWidth(maxWidth - 40);
+                    past.side[index].setFontSize(25);
                     return SizedBox(
                       width: 100,
                       height: 100,
