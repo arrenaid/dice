@@ -65,7 +65,7 @@ class _DiceControllerState extends State<DiceController> {
 
   /// Добавляем кость с настраиваемыми сторонами
   Widget addCustomSideDice() {
-    return /*Bounce*/ ElevatedButton(
+    return ElevatedButton(
       onPressed: () {
         showModalBottomSheet(
           context: context,

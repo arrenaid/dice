@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
+import 'package:dice/core/roll_history.dart';
 import 'package:dice/widget/dice_stack_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_shadow/simple_shadow.dart';
 import '../constants.dart';
 import '../core/dice_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,22 +13,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'dice_state.dart';
 
 class DiceCubit extends Cubit<DiceState> {
-  // static const String sharedCountType = "type";
-  // static const String sharedCountCount = "count";
-  // static const String sharedCountKey = "key";
 
   DiceCubit()
-      : super(DiceState(currentImg: [], listDice: [], listAllDice: [
-          AnonymousDice(),
-          D4(),
-          D6(),
-          D8(),
-          D10(),
-          D12(),
-          D20(),
-          AnonymousDice()
-        ], rollResult: 0, rollMax: 12, status: StateStatus.initial,
-      successThreshold: 0.5)) {
+      : super(DiceState(
+            currentImg: [],
+            listDice: [],
+            listAllDice: [
+              AnonymousDice(),
+              D4(),
+              D6(),
+              D8(),
+              D10(),
+              D12(),
+              D20(),
+              AnonymousDice()
+            ],
+            rollResult: 0,
+            rollMax: 12,
+            status: StateStatus.initial,
+            successThreshold: 0.5,
+            past: [])) {
     _loadDiceInfinite();
     _loadDiceCustomSide();
     _loadDiceCount();
@@ -38,7 +42,7 @@ class DiceCubit extends Cubit<DiceState> {
   dispose() {
     _saveDiceInfinite(state.listAllDice);
     _saveDiceCustomSide(state.listAllDice);
-    _saveListDiceCount();//state.listDice
+    _saveListDiceCount(); //state.listDice
     _saveSuccessThreshold(state.successThreshold);
   }
 
@@ -68,55 +72,50 @@ class DiceCubit extends Cubit<DiceState> {
   roll() {
     emit(state.copyWith(status: StateStatus.loading));
     int count = 0; //rollResult
-    List<Widget> current = []; //currentImage
+    List<DiceStackWidget> current = [];
+    RollHistory past;
     for (var element in state.listDice) {
-      // String res = element.getSide();
-      // count += element.sides[res]!;
       Side res = element.getSide();
       count += res.num;
-      // int index = res.image.indexOf("-");
-      if (element.runtimeType == DiceInfinite) {
-        //DCustom ?proxy = element as DCustom;
-        current.add(DiceStackWidget(
-          imagePath: res.image,
-          value: res.num,
-          //element.rollResult,
-          scale: axisCount(),
-          type: element.runtimeType,
-          text: "D${infiniteLength(element)}",
-          color: element.color,
-        ));
-      } else if (element.runtimeType == DiceCustomSide) {
-        //DCustom ?proxy = element as DCustom;
-        current.add(DiceStackWidget(
-          imagePath: res.image,
-          value: res.num,
-          //element.rollResult,
-          scale: axisCount(),
-          type: element.runtimeType,
-          text: "Dc${element.sides.length}",
-          color: element.color,
-        ));
-      } else if (element.runtimeType != D6) {
+
+      if (element.runtimeType == DiceInfinite ||
+          element.runtimeType == DiceCustomSide) {
         current.add(DiceStackWidget(
           imagePath: res.image,
           value: res.num,
           scale: axisCount(),
           type: element.runtimeType,
+          label: element.runtimeType == DiceInfinite
+              ? "D${infiniteLength(element)}"
+              : "Dc${element.sides.length}",
           color: element.color,
         ));
       } else {
-        current.add(SimpleShadow(
-            offset: const Offset(9, 9), // Default: Offset(2, 2)
-            color: Colors.black,//defBtnClr,
-            sigma: 3.5,
-            child:  Image.asset(res.image, color: element.color)));
+        current.add(
+          DiceStackWidget(
+              imagePath: res.image,
+              value: res.num,
+              scale: axisCount(),
+              type: element.runtimeType,
+              color: element.color),
+        );
       }
     }
+
+    past = RollHistory(
+      side: current,
+      threshold: state.successThreshold,
+      result: count,
+      max: state.rollMax,
+    );
+    var twinPast = state.past;
+    twinPast.add(past);
+
     emit(state.copyWith(
         listDice: _shake(state.listDice),
-        currentImg:  current,
+        currentImg: current,
         rollResult: count,
+        past: twinPast,
         status: StateStatus.rolling));
   }
 
@@ -174,7 +173,8 @@ class DiceCubit extends Cubit<DiceState> {
   changeSuccessThreshold(double threshold) {
     emit(state.copyWith(status: StateStatus.loading));
     _saveSuccessThreshold(threshold);
-    emit(state.copyWith(successThreshold: threshold, status: StateStatus.loaded));
+    emit(state.copyWith(
+        successThreshold: threshold, status: StateStatus.loaded));
   }
 
   int countType(Dice type) {
@@ -279,8 +279,8 @@ class DiceCubit extends Cubit<DiceState> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      List<DiceInfinite> listInfinite =
-          List.from(list.where((dice) => dice.runtimeType == DiceInfinite).toList());
+      List<DiceInfinite> listInfinite = List.from(
+          list.where((dice) => dice.runtimeType == DiceInfinite).toList());
 
       List<String> jsonDataListInfinite = listInfinite
           .map((dice) => jsonEncode({
@@ -298,13 +298,14 @@ class DiceCubit extends Cubit<DiceState> {
   Future<void> _saveDiceCustomSide(List<Dice> list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    List<DiceCustomSide> listDcs = List.from(list.where((dice) =>
-      dice.runtimeType == DiceCustomSide));
+    List<DiceCustomSide> listDcs =
+        List.from(list.where((dice) => dice.runtimeType == DiceCustomSide));
 
     List<String> jsonDataListDcs = listDcs
         .map((dice) => jsonEncode({
               jsonDcsKey: dice.keyValue,
-              jsonDcsSides: List.generate(dice.sides.length, (index) => dice.sides[index].num),
+              jsonDcsSides: List.generate(
+                  dice.sides.length, (index) => dice.sides[index].num),
             }))
         .toList();
 
@@ -374,12 +375,12 @@ class DiceCubit extends Cubit<DiceState> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       Map<int, List<int>> mapDcs = {};
       final List<String>? jsonStringList =
-      prefs.getStringList(sharedDiceCustomSideKey);
+          prefs.getStringList(sharedDiceCustomSideKey);
 
       if (jsonStringList!.isNotEmpty) {
         for (var jPost in jsonStringList) {
           final Map<String, dynamic> map =
-          await json.decode(jPost) as Map<String, dynamic>;
+              await json.decode(jPost) as Map<String, dynamic>;
           if (map.isNotEmpty) {
             final key = map[jsonDcsKey] as int;
             final list = map[jsonDcsSides];
@@ -432,7 +433,7 @@ class DiceCubit extends Cubit<DiceState> {
           final Map<String, dynamic> map =
               await json.decode(jPost) as Map<String, dynamic>;
           if (map.isNotEmpty) {
-            if(map[jsonCountCount] > 0) {
+            if (map[jsonCountCount] > 0) {
               types.add(map[jsonCountType] as String);
               counters.add(map[jsonCountCount] as int);
               keys.add(map[jsonCountKey]);
@@ -474,7 +475,8 @@ class DiceCubit extends Cubit<DiceState> {
     emit(state.copyWith(status: StateStatus.loading));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     double? threshold = prefs.getDouble(sharedSuccessThreshold);
-    emit(state.copyWith(status: StateStatus.loaded, successThreshold: threshold ?? 0.5));
+    emit(state.copyWith(
+        status: StateStatus.loaded, successThreshold: threshold ?? 0.5));
   }
 
   int infiniteLength(Dice dice) {

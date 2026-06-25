@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:dice/screens/history_screen.dart';
 import 'package:dice/widget/roll_button.dart';
 import 'package:dice/screens/bottom_sheet_widget.dart';
 import 'package:dice/cubit/dice_cubit.dart';
@@ -38,6 +39,7 @@ class _DiceScreenState extends State<DiceScreen>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DiceCubit, DiceState>(builder: (context, state) {
+      double gridWidth = getGridViewWidth(context);
       return Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -58,6 +60,7 @@ class _DiceScreenState extends State<DiceScreen>
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height / 2,
+                    width: gridWidth,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 5),
                     child: state.currentImg.isEmpty
@@ -71,19 +74,19 @@ class _DiceScreenState extends State<DiceScreen>
                               child: GridView.builder(
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: context
-                                        .read<DiceCubit>()
-                                        .axisCount(),
+                                    crossAxisCount:
+                                        context.read<DiceCubit>().axisCount(),
                                   ),
                                   itemCount: state.currentImg.length,
                                   physics: state.listDice.length < 7
                                       ? const NeverScrollableScrollPhysics()
                                       : const BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
+                                    state.currentImg[index]
+                                        .setFontSizeFromWidth(gridWidth);
                                     return RotationTransition(
-                                      turns: _controller.drive(
-                                          Tween<double>(
-                                              begin: 1.0, end: pi / 6)),
+                                      turns: _controller.drive(Tween<double>(
+                                          begin: 1.0, end: pi / 6)),
                                       child: FadeTransition(
                                         opacity: _controller.drive(
                                             Tween<double>(
@@ -208,21 +211,40 @@ class _DiceScreenState extends State<DiceScreen>
                           ),
 
                           ///результат броска
-                          Container(
-                            child: state.currentImg.isEmpty
-                                ? null
-                                : FadeTransition(
-                                    opacity: _controller.drive(
-                                        Tween<double>(begin: 1.0, end: 0.0)),
-                                    child: ScaleTransition(
-                                      scale: _controller.drive(Tween<double>(
-                                          begin: 1.0, end: 1.2)), //end: 1.2
-                                      child: Text(
-                                        "${state.rollResult}",
-                                        style: defTs.copyWith(fontSize: 100),
+                          GestureDetector(
+                            onLongPress: () {
+                              showModalBottomSheet(
+                                context: context,
+                                elevation: 15,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(50))),
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                builder: (context) => LayoutBuilder(
+                                  builder: (context, constraints) =>
+                                      HistoryScreen(
+                                    past: state.past,
+                                    width: constraints.maxWidth,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              child: state.currentImg.isEmpty
+                                  ? null
+                                  : FadeTransition(
+                                      opacity: _controller.drive(
+                                          Tween<double>(begin: 1.0, end: 0.0)),
+                                      child: ScaleTransition(
+                                        scale: _controller.drive(Tween<double>(
+                                            begin: 1.0, end: 1.2)), //end: 1.2
+                                        child: Text(
+                                          "${state.rollResult}",
+                                          style: defTs.copyWith(fontSize: 100),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                            ),
                           ),
 
                           ///максимальный возможный бросок
@@ -298,5 +320,14 @@ class _DiceScreenState extends State<DiceScreen>
         ),
       );
     });
+  }
+
+  double getGridViewWidth(BuildContext context) {
+    if (MediaQuery.of(context).size.width - 40 <
+        MediaQuery.of(context).size.height / 2) {
+      return MediaQuery.of(context).size.width;
+    } else {
+      return MediaQuery.of(context).size.height / 2;
+    }
   }
 }
