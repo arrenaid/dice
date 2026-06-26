@@ -60,7 +60,7 @@ class HistoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isWin = past.result > past.max * past.threshold;
+    bool isWin = past.result >= past.max * past.threshold;
     return SizedBox(
       height: 120,
       child: OverflowBox(

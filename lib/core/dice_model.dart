@@ -75,7 +75,7 @@ class DiceInfinite extends Dice {
   @override
   List<Side> sides = [];
 
-  DiceInfinite({int length = 100, int key = 0} ){
+  DiceInfinite({int length = 100, int key = 1} ){
     sides.add(Side(img, 1));
     sideCount = length;
     keyValue = key == 0 ? Random().nextInt(maxIntRandom) : key;
@@ -93,7 +93,7 @@ class DiceInfinite extends Dice {
 
   @override
   Side getSide(){
-    Side result = Side(img,Random().nextInt(sideCount+1));
+    Side result = Side(img,Random().nextInt(sideCount) + 1);
     sides.add(result);
     return result ;
   }

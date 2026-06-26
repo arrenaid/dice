@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
+import '../widget/EmptyInfoWidget.dart';
 
 class DiceScreen extends StatefulWidget {
   const DiceScreen({super.key});
@@ -64,7 +65,7 @@ class _DiceScreenState extends State<DiceScreen>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 5),
                     child: state.currentImg.isEmpty
-                        ? null
+                        ? EmptyInfoWidget(width: gridWidth)
                         : ScaleTransition(
                             scale: _controller
                                 .drive(Tween<double>(begin: 1.0, end: 2.0)),
@@ -98,9 +99,7 @@ class _DiceScreenState extends State<DiceScreen>
                                           child: Container(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: state.currentImg[
-                                                  index] //Image(image: state.currentImg[index].image, color: defSecClr),
-                                              ),
+                                              child: state.currentImg[index]),
                                         ),
                                       ),
                                     );
@@ -117,7 +116,7 @@ class _DiceScreenState extends State<DiceScreen>
                         children: [
                           Column(
                             children: [
-                              if (state.rollResult >
+                              if (state.rollResult >=
                                   (state.rollMax * state.successThreshold)
                                       .ceil()) ...[
                                 ScaleTransition(
@@ -172,7 +171,7 @@ class _DiceScreenState extends State<DiceScreen>
                                 ),
                               ),
 
-                              if (!(state.rollResult >
+                              if (!(state.rollResult >=
                                   (state.rollMax * state.successThreshold)
                                       .ceil())) ...[
                                 ScaleTransition(
