@@ -33,6 +33,6 @@ flutter:
     -  assets/dice/
 
   fonts:
-    -  family: MarkoOne
+    -  family: Artifika
        fonts:
-         -  asset: assets/fonts/MarkoOne-Regular.ttf
+         - asset: assets/fonts/Artifika-Regular.ttf

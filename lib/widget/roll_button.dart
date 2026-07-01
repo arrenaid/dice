@@ -4,13 +4,11 @@ import '../constants.dart';
 class RollButton extends StatelessWidget {
   final VoidCallback onPressed;
   final  VoidCallback onLongPress;
-  final Widget child;
 
-  const RollButton({Key? key,
+  const RollButton({super.key,
     required this.onPressed,
-    required this.child,
     required this.onLongPress
-  }) : super(key: key);
+  });
 
   final  widthFactor = 1.4;
 
@@ -47,43 +45,13 @@ class RollButton extends StatelessWidget {
         onLongPress: onLongPress,
         child: Center(
           widthFactor: widthFactor,
-          child: child,
+          child: Text(
+            "ROLL",
+            style: defTs.copyWith(
+                color: defBtnClr, fontSize: 40, shadows: []),
+          ),
         ),
       ),
-      // child: BounceElevatedButton(
-      //   onPressed: onPressed,
-      //   child:  child,
-      // //     Container(
-      // //     height: 44.0,
-      // //     decoration: BoxDecoration(
-      // //     gradient: LinearGradient(
-      // //     colors: [Color.fromARGB(255, 2, 173, 102), Colors.blue])),
-      // // child: ElevatedButton(
-      // // onPressed: () {},
-      // // style: ElevatedButton.styleFrom(
-      // // backgroundColor: Colors.transparent,
-      // // shadowColor: Colors.transparent),
-      // // child: Text('Elevated Button'),
-      //
-      //   // Text(
-      //   //   'add dice',
-      //   //   style: defTs.copyWith(color: defPriClr, shadows: []),
-      //   //   textAlign: TextAlign.center,
-      //   // ),
-      //   // Icon(
-      //   //   Icons.add,
-      //   //   color: defPriClr,
-      //   // ),
-      //   // style: ElevatedButton.styleFrom(
-      //   //   backgroundColor: defSecClr,
-      //   //   elevation: 3,
-      //   //   shape: RoundedRectangleBorder(
-      //   //       borderRadius: BorderRadius.circular(30)),
-      //   // ),
-      //   size: 80,
-      //   borderRadius: BorderRadius.circular(30),
-      //   color: Colors.transparent,
-      // ),
     );
   }
 }

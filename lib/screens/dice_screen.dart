@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
-import '../widget/EmptyInfoWidget.dart';
+import '../widget/empty_info_widget.dart';
 
 class DiceScreen extends StatefulWidget {
   const DiceScreen({super.key});
@@ -303,11 +303,6 @@ class _DiceScreenState extends State<DiceScreen>
                             ),
                           );
                         },
-                        child: Text(
-                          "ROLL",
-                          style: defTs.copyWith(
-                              color: defBtnClr, fontSize: 40, shadows: []),
-                        ),
                       ),
                     ),
                   ),

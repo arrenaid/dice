@@ -71,7 +71,7 @@ const List<Color> colorsDice = [
 const TextStyle defTs =  TextStyle(
     color: defSecClr,
     fontSize: 24,
-    fontFamily: "MarkoOne",
+    fontFamily: "Artifika",
     fontWeight: FontWeight.bold,
     shadows: [Shadow(
       offset: Offset(10.0, 10.0),

@@ -23,14 +23,14 @@ class DiceStackWidget extends StatelessWidget {
   );
 
   DiceStackWidget({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.value,
     required this.scale,
     required this.type,
     required this.color,
     this.label,
-  }) : super(key: key);
+  });
 
   static FractionalOffset getOffset(Type type) {
     switch (type) {
@@ -93,7 +93,7 @@ class DiceStackWidget extends StatelessWidget {
         ///D6 достаточно только картинки, остальным же надо показать цифру
         if(type != D6..runtimeType)...[
           Align(
-              alignment: offset!,
+              alignment: offset,
               child: ShaderMask(
                 blendMode: BlendMode.srcIn,
                 shaderCallback: (bounds) => DiceStackWidget.gradient.createShader(
@@ -104,8 +104,9 @@ class DiceStackWidget extends StatelessWidget {
                   style: TextStyle(
                     color: defPriClr,
                     fontSize: fontSize,
-                    fontFamily: "MarkoOne",
+                    fontFamily: "Artifika",
                     fontWeight: FontWeight.bold,
+                    letterSpacing: -3,
                   ),
                 ),
               )),

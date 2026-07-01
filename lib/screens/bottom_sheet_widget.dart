@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 import '../core/dice_model.dart';
+import '../widget/success_threahold_slider.dart';
 
 class DiceController extends StatefulWidget {
   final double width;
@@ -395,57 +396,6 @@ class RowDiceCounting extends StatelessWidget {
   }
 }
 
-class SuccessThresholdSlider extends StatelessWidget {
-  const SuccessThresholdSlider({
-    super.key,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final double value;
-  final ValueChanged<double> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final percent = (value * 100).round();
-
-    return Container(
-      // padding: EdgeInsets.only(top: 40, left: 10,right: 10 ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: defBtnClr,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Success Threshold $percent%'.toUpperCase(),
-            style: defTs.copyWith(fontSize: 18),
-          ),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-                activeTrackColor: defSecClr,
-                inactiveTrackColor: defPriClr,
-                thumbColor: defSecClr,
-                overlayColor: defPriClr.withOpacity(0.5),
-                thumbShape: DiamondSliderThumbShape()),
-            child: Slider(
-              // activeColor: defSecClr,
-              // inactiveColor: defPriClr,
-              value: value,
-              min: 0.0,
-              max: 1.0,
-              divisions: 100,
-              onChanged: onChanged,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 SnackBar MySnackBar(String title) {
   return SnackBar(
       behavior: SnackBarBehavior.floating,
@@ -460,58 +410,4 @@ SnackBar MySnackBar(String title) {
         style: defTs,
         textAlign: TextAlign.center,
       ));
-}
-
-class DiamondSliderThumbShape extends SliderComponentShape {
-  final double radius;
-
-  const DiamondSliderThumbShape({this.radius = 12.0});
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    // Размер определяется диаметром ромба (радиус * 2)
-    return Size.fromRadius(radius);
-  }
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    final canvas = context.canvas;
-
-    // Получаем цвет в зависимости от состояния (активен/неактивен)
-    final colorTween = ColorTween(
-      begin: sliderTheme.disabledThumbColor,
-      end: sliderTheme.thumbColor,
-    );
-    final color = colorTween.evaluate(enableAnimation)!;
-
-    // Создаем путь для ромба
-    final path = Path();
-    // Верхняя точка
-    path.moveTo(center.dx, center.dy - radius);
-    // Правая точка
-    path.lineTo(center.dx + radius, center.dy);
-    // Нижняя точка
-    path.lineTo(center.dx, center.dy + radius);
-    // Левая точка
-    path.lineTo(center.dx - radius, center.dy);
-
-    path.close();
-
-    // Рисуем и закрашиваем ромб
-    final paint = Paint()..color = color;
-    canvas.drawPath(path, paint);
-  }
 }
